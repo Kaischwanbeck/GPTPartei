@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parteimitglieder - GPT Partei</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-blue: #001f54;
+            --secondary-blue: #034078;
+            --accent-cyan: #00d4ff;
+            --accent-yellow: #ffd700;
+            --text-dark: #1a1a1a;
+            --text-light: #666;
+            --bg-light: #f8f9fa;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background: var(--bg-light);
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: white;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+        }
+
+        .logo-nav {
+            height: 50px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .logo-nav:hover {
+            transform: scale(1.05);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--primary-blue);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-cyan);
+        }
+
+        .back-btn {
+            background: var(--accent-cyan);
+            color: white;
+            padding: 0.6rem 1.5rem;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: var(--primary-blue);
+            transform: translateY(-2px);
+        }
+
+        /* Hero */
+        .hero {
+            margin-top: 70px;
+            padding: 4rem 2rem 3rem;
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
+            color: white;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        /* Intro Section */
+        .intro {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 3rem;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            text-align: center;
+        }
+
+        .intro p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--text-dark);
+        }
+
+        /* Members Grid */
+        .members-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .member-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            border-top: 4px solid var(--accent-cyan);
+        }
+
+        .member-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.2);
+        }
+
+        .member-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1.5rem;
+            background: linear-gradient(135deg, var(--accent-cyan) 0%, #0099cc 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            color: white;
+        }
+
+        .member-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-blue);
+            margin-bottom: 0.5rem;
+        }
+
+        .member-role {
+            font-size: 1rem;
+            color: var(--text-light);
+            font-weight: 500;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--bg-light);
+        }
+
+        .member-focus {
+            font-size: 0.9rem;
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        /* Special styling for leadership */
+        .member-card.leadership {
+            border-top-color: var(--accent-yellow);
+        }
+
+        .member-card.leadership .member-icon {
+            background: linear-gradient(135deg, var(--accent-yellow) 0%, #ffb700 100%);
+            color: var(--primary-blue);
+        }
+
+        /* Values Section */
+        .values {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
+            color: white;
+            padding: 3rem;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .values h2 {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+
+        .value-item {
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .value-item:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
+        }
+
+        .value-item h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            color: var(--accent-cyan);
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .members-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <img src="GptLogo.jpg" alt="GPT Partei Logo" class="logo-nav" onclick="window.location.href='Parteipunkte_Detail.html'">
+            <ul class="nav-links">
+                <li><a href="Parteipunkte_Detail.html" class="back-btn">← Zurück zum Programm</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <h1>Unser Team</h1>
+        <p>Gemeinschaft · Progress · Tatkraft</p>
+    </section>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Intro -->
+        <div class="intro">
+            <p>Die GPT Partei wird von einem engagierten Team geleitet, das sich für pragmatische Lösungen und evidenzbasierte Politik einsetzt. Unsere Fachsprecher bringen Expertise aus ihren jeweiligen Bereichen ein, um Deutschland zukunftsfähig zu gestalten.</p>
+        </div>
+
+        <!-- Members Grid -->
+        <div class="members-grid">
+            <!-- Parteivorsitz -->
+            <div class="member-card leadership">
+                <div class="member-icon">J</div>
+                <div class="member-name">Julius</div>
+                <div class="member-role">Parteivorsitz</div>
+                <div class="member-focus">Strategische Führung und politische Gesamtverantwortung</div>
+            </div>
+
+            <!-- Generalsekretariat -->
+            <div class="member-card leadership">
+                <div class="member-icon">K</div>
+                <div class="member-name">Karl</div>
+                <div class="member-role">Generalsekretariat</div>
+                <div class="member-focus">Organisation, Koordination und operative Umsetzung</div>
+            </div>
+
+            <!-- Schatzmeister -->
+            <div class="member-card leadership">
+                <div class="member-icon">J</div>
+                <div class="member-name">Jonathan</div>
+                <div class="member-role">Schatzmeister</div>
+                <div class="member-focus">Finanzverwaltung und Budgetplanung</div>
+            </div>
+
+            <!-- Fachsprecher Digital -->
+            <div class="member-card">
+                <div class="member-icon">M</div>
+                <div class="member-name">Malte</div>
+                <div class="member-role">Fachsprecher Digital</div>
+                <div class="member-focus">Digitalisierung, IT-Infrastruktur, E-Government</div>
+            </div>
+
+            <!-- Fachsprecher Wirtschaft/Finanzen -->
+            <div class="member-card">
+                <div class="member-icon">C</div>
+                <div class="member-name">Constantin</div>
+                <div class="member-role">Fachsprecher Wirtschaft/Finanzen</div>
+                <div class="member-focus">Wirtschaftspolitik, Steuern, Standortsicherung</div>
+            </div>
+
+            <!-- Fachsprecher Soziales/Arbeit -->
+            <div class="member-card">
+                <div class="member-icon">K</div>
+                <div class="member-name">Kai</div>
+                <div class="member-role">Fachsprecher Soziales/Arbeit</div>
+                <div class="member-focus">Arbeitsmarkt, Sozialversicherung, Bürgergeld</div>
+            </div>
+        </div>
+
+        <!-- Values -->
+        <div class="values">
+            <h2>Unsere Werte</h2>
+            <div class="values-grid">
+                <div class="value-item">
+                    <h3>Gemeinschaft</h3>
+                    <p>Zusammenhalt durch faire Chancen und soziale Sicherheit</p>
+                </div>
+                <div class="value-item">
+                    <h3>Progress</h3>
+                    <p>Zukunftsorientierung durch Innovation und Modernisierung</p>
+                </div>
+                <div class="value-item">
+                    <h3>Tatkraft</h3>
+                    <p>Pragmatische Umsetzung evidenzbasierter Lösungen</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

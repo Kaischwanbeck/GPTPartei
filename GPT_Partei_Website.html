@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPT Partei - Gemeinschaft · Progress · Tatkraft</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-blue: #001f54;
+            --secondary-blue: #034078;
+            --accent-cyan: #00d4ff;
+            --accent-yellow: #ffd700;
+            --text-dark: #1a1a1a;
+            --text-light: #666;
+            --bg-light: #f8f9fa;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: white;
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+        }
+
+        .logo-nav {
+            height: 50px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .logo-nav:hover {
+            transform: scale(1.05);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--primary-blue);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent-cyan);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            margin-top: 70px;
+            padding: 5rem 2rem;
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="2" fill="%2300d4ff" opacity="0.1"/></svg>');
+            opacity: 0.3;
+        }
+
+        .hero-logo {
+            max-width: 500px;
+            height: auto;
+            margin: 0 auto 2rem;
+            display: block;
+            animation: fadeInDown 1s ease;
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            animation: fadeInUp 1s ease 0.2s both;
+            position: relative;
+            z-index: 1;
+        }
+
+        .tagline {
+            font-size: 1.5rem;
+            color: var(--accent-cyan);
+            margin-bottom: 0.5rem;
+            animation: fadeInUp 1s ease 0.4s both;
+            position: relative;
+            z-index: 1;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            animation: fadeInUp 1s ease 0.6s both;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-logo {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 8rem 2rem 4rem 2rem;
+        }
+
+        /* Section Styles */
+        section {
+            margin-bottom: 4rem;
+            padding-top: 5rem;
+            margin-top: -5rem;
+            animation: fadeIn 1s ease;
+        }
+
+        section h2 {
+            font-size: 2.5rem;
+            color: var(--primary-blue);
+            margin-bottom: 2rem;
+            margin-top: 1rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        section h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background: var(--accent-cyan);
+            border-radius: 2px;
+        }
+
+        /* Wirtschaftslage Card */
+        .wirtschaft-card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .wirtschaft-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15);
+        }
+
+        .wirtschaft-card h3 {
+            color: var(--primary-blue);
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .wirtschaft-card p {
+            color: var(--text-light);
+            font-size: 1.05rem;
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+
+        /* Programm Grid */
+        .programm-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .programm-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .programm-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 212, 255, 0.2);
+            border-color: var(--accent-cyan);
+        }
+
+        .programm-card h3 {
+            color: var(--primary-blue);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card-number {
+            background: var(--accent-cyan);
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .programm-card h4 {
+            color: var(--secondary-blue);
+            font-size: 1.1rem;
+            margin: 1rem 0 0.5rem;
+        }
+
+        .programm-card ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .programm-card li {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+            color: var(--text-light);
+        }
+
+        .programm-card li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: var(--accent-cyan);
+            font-weight: bold;
+        }
+
+        .goals-box {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+            padding: 1rem;
+            border-radius: 10px;
+            margin-top: 1rem;
+            border-left: 4px solid var(--accent-yellow);
+        }
+
+        .goals-box strong {
+            color: var(--primary-blue);
+        }
+
+        /* Finanzierung Section */
+        .finanzierung-box {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
+            color: white;
+            padding: 3rem;
+            border-radius: 15px;
+            margin-top: 2rem;
+        }
+
+        .finanzierung-box h3 {
+            color: var(--accent-cyan);
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .finanzierung-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .finanzierung-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .finanzierung-item:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
+        }
+
+        .finanzierung-item strong {
+            color: var(--accent-cyan);
+            font-size: 1.2rem;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Werte Section */
+        .werte-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .wert-card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .wert-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .wert-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .wert-card h3 {
+            color: var(--primary-blue);
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .wert-card p {
+            color: var(--text-light);
+            line-height: 1.8;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--primary-blue);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        footer p {
+            margin: 0.5rem 0;
+            opacity: 0.9;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Scroll Animation */
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.6s ease;
+        }
+
+        .scroll-reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .tagline {
+                font-size: 1.2rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .programm-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Smooth Scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Detail Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background: white;
+            max-width: 800px;
+            margin: 5% auto;
+            padding: 3rem;
+            border-radius: 15px;
+            position: relative;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 2rem;
+            cursor: pointer;
+            color: var(--text-light);
+            transition: color 0.3s ease;
+        }
+
+        .close-modal:hover {
+            color: var(--primary-blue);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <img src="GptLogo.jpg" alt="GPT Partei Logo" class="logo-nav" onclick="scrollToTop()">
+            <ul class="nav-links">
+                <li><a href="#home">Start</a></li>
+                <li><a href="#wirtschaft">Wirtschaftslage</a></li>
+                <li><a href="#programm">Programm</a></li>
+                <li><a href="Parteipunkte_Detail.html" style="background: var(--accent-cyan); color: white; padding: 0.5rem 1rem; border-radius: 20px;">Alle 14 Parteipunkte →</a></li>
+                <li><a href="#finanzierung">Finanzierung</a></li>
+                <li><a href="#werte">Werte</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <img src="GptLogo.jpg" alt="GPT Partei Logo" class="hero-logo">
+        <h1>GPT PARTEI</h1>
+        <div class="tagline">Gemeinschaft · Progress · Tatkraft</div>
+        <div class="subtitle">Pragmatisch · Datenorientiert · Solidarisch</div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Präambel -->
+        <section class="scroll-reveal">
+            <h2>Präambel</h2>
+            <div class="wirtschaft-card">
+                <p>Die GPT Partei steht für eine Politik, die soziale Gerechtigkeit mit wirtschaftlichem Fortschritt verbindet. Wir setzen auf evidenzbasierte Entscheidungen, messbare Ergebnisse und transparente Prozesse. Unsere drei Grundpfeiler – Gemeinschaft, Progress und Tatkraft – leiten unser Handeln in allen Politikfeldern.</p>
+            </div>
+        </section>
+
+        <!-- Wirtschaftslage -->
+        <section id="wirtschaft" class="scroll-reveal">
+            <h2>Stellungnahme zur Wirtschaftslage 2025</h2>
+            
+            <div class="wirtschaft-card">
+                <h3>Analyse der gegenwärtigen Situation</h3>
+                <p>Deutschland befindet sich in einer wirtschaftlich herausfordernden Phase. Die realen Konsumausgaben privater Haushalte stagnieren seit 2022, die Produktivität je Arbeitsstunde wächst mit nur 0,2% p.a. deutlich zu schwach. Gleichzeitig bedrohen hohe Energiepreise (Industriestrompreis ~18 ct/kWh vs. 7 ct/kWh in den USA) und lange Genehmigungsverfahren (Median 24 Monate) unseren Industriestandort.</p>
+                <p>Die öffentliche Investitionsquote liegt mit 2,5% des BIP unter dem OECD-Durchschnitt von 3,5%. Die rigide Schuldenbremse ohne Investitionsregel verhindert zukunftsorientierte Ausgaben in Bildung, Digitalisierung und Infrastruktur. Zudem verlieren wir im internationalen Wettbewerb um Fachkräfte und Unternehmensansiedlungen an Boden.</p>
+            </div>
+
+            <div class="wirtschaft-card">
+                <h3>Unsere wirtschaftspolitische Ausrichtung</h3>
+                <p>Wir lehnen sowohl reine Austeritätspolitik als auch unsolide Schuldenpolitik ab. Stattdessen setzen wir auf eine <strong>Investitionsregel</strong>, die zwischen konsumtiven und investiven Ausgaben unterscheidet und ~40 Mrd. € zusätzlichen jährlichen Spielraum für Zukunftsinvestitionen schafft.</p>
+                <p>Kaufkraft muss gezielt gestärkt werden – durch MwSt.-Senkung auf Grundbedarf (7% → 5%) statt Gießkannenpolitik. Arbeit muss sich lohnen – durch faire Zuverdienstzonen und Job-Start-Boni statt hoher Grenzbelastungen von bis zu 90%.</p>
+                <p>Wir brauchen eine <strong>aktive Industriepolitik</strong> für strategische Schlüsseltechnologien: Halbleiter, Batteriezellen, MedTech, CleanTech. Planungsbeschleunigung (max. 12 Monate Genehmigung) und wettbewerbsfähige Energiepreise (7-10 ct/kWh für energieintensive Industrie gegen Standortgarantien) sind unverzichtbar.</p>
+            </div>
+        </section>
+
+        <!-- Programm -->
+        <section id="programm" class="scroll-reveal">
+            <h2>Programmatische Schwerpunkte</h2>
+            
+            <div class="programm-grid">
+                <!-- Card 1 -->
+                <div class="programm-card">
+                    <h3><span class="card-number">1</span> Steuerpolitik & Kaufkraft</h3>
+                    <h4>Problemstellung</h4>
+                    <p>Hohe Abgabenlast dämpft Kaufkraft; mangelnde Investitionen bremsen Wachstum.</p>
+                    <h4>Maßnahmen</h4>
+                    <ul>
+                        <li>MwSt.-Senkung auf Grundbedarf (7% → 5%)</li>
+                        <li>Reform Schuldenbremse mit Investitionsregel (~40 Mrd. €/Jahr)</li>
+                        <li>Automatischer Ausgleich kalte Progression</li>
+                        <li>Investitionsfreibetrag 20% für grüne/digitale Anlagen</li>
+                    </ul>
+                    <div class="goals-box">
+                        <strong>Ziele:</strong> Investitionsquote 3,5% BIP | Konsumausgaben +1,5% p.a. | Unternehmensinvestitionen +3% p.a.
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="programm-card">
+                    <h3><span class="card-number">2</span> Arbeit & Bürgergeld</h3>
+                    <h4>Problemstellung</h4>
+                    <p>Arbeit lohnt sich zu wenig; Grenzbelastung 70-90%; Verweildauer Median 2,5 Jahre.</p>
+                    <h4>Maßnahmen</h4>
+                    <ul>
+                        <li>Zuverdienstzonen reformieren (max. 60% Grenzbelastung)</li>
+                        <li>Job-Start-Bonus 1.000 € bei Arbeitsaufnahme ≥6 Monate</li>
+                        <li>Verpflichtende Qualifizierungs-Module (3-12 Wochen)</li>
+                        <li>Digitale Plattform "Mein Jobpfad" mit Matching</li>
+                    </ul>
+                    <div class="goals-box">
+                        <strong>Ziele:</strong> Abgänge in Arbeit +20% | Verweildauer -20% | Qualifizierung 80%
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="programm-card">
+                    <h3><span class="card-number">3</span> Fachkräfte</h3>
+                    <h4>Problemstellung</h4>
+                    <p>500.000-600.000 offene Stellen; Vakanzzeit 139 Tage; Anerkennung dauert 6-12 Monate.</p>
+                    <h4>Maßnahmen</h4>
+                    <ul>
+                        <li>Skills Fast Track: 6-12 Monats-Intensivlehrgänge, 50.000 Plätze/Jahr</li>
+                        <li>One-Stop-Anerkennung (zentrale Stelle, digitale Vorprüfung, ≤90 Tage)</li>
+                        <li>Fast-Track-Visa für Mangelberufe (Entscheidung 4 Wochen)</li>
+                        <li>Weiterbildungsfonds (Arbeitgeber-Umlage 0,5% Lohnsumme)</li>
+                    </ul>
+                    <div class="goals-box">
+                        <strong>Ziele:</strong> Fachkräftelücke -25% | Anerkennung ≤90 Tage | 50.000 Teilnehmer/Jahr
+                    </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="programm-card">
+                    <h3><span class="card-number">4</span> Bildung</h3>
+                    <h4>Problemstellung</h4>
+                    <p>Bildungsföderalismus ohne Standards; digitale Bildung mangelhaft; MINT-Kompetenzen schwach.</p>
+                    <h4>Maßnahmen</h4>
+                    <ul>
+                        <li>Informatik verpflichtend ab Klasse 5 (bundesweit harmonisiert)</li>
+                        <li>DigitalPakt 2.0: 5 Mrd. €/Jahr (Hardware, Wartung, Lernplattformen)</li>
+                        <li>500 Maker-Labs bundesweit (3D-Druck, Robotik, Programmierung)</li>
+                        <li>Bundesweite Bildungsstandards mit Vergleichstests</li>
+                    </ul>
+                    <div class="goals-box">
+                        <strong>Ziele:</strong> MINT-Kompetenzen Top-10 PISA | Informatik 100% | 500 Maker-Labs
+                    </div>
+                </div>
+
+                <!-- Card 5 -->
+                <div class="programm-card">
+                    <h3><span class="card-number">5</span> Digitalisierung</h3>
+                    <h4>Problemstellung</h4>
+                    <p>FTTH-Quote 25%; Online-Verwaltung 30%; eID-Nutzung 10%; Once-Only kaum umgesetzt.</p>
+                    <h4>Maßnahmen</h4>
+                    <ul>
+                        <li>Glasfaser-Offensive: FTTH 100% bis 2029, 15 Mrd. € Förderung</li>
+                        <li>5G/6G-Flächendeckung (100% Bevölkerung, 90% Fläche bis 2028)</li>
+                        <li>Föderale Cloud (Bund/Länder/Kommunen, Once-Only, DSGVO-konform)</li>
+                        <li>Interoperabilitätsstandards (APIs, Open-Data-Pflicht, eID-first)</li>
+                    </ul>
+                    <div class="goals-box">
+                        <strong>Ziele:</strong> FTTH 100% | Online-Verwaltung 100% | eID-Nutzung 50%
+                    </div>
+                </div>
+
+                <!-- Card 6 -->
+                <div class="programm-card">
+                    <h3><span class="card-number">6</span> Industriestandort</h3>
+                    <h4>Problemstellung</h4>
+                    <p>Genehmigungen 24 Monate; Bürokratie 65 Mrd. €/Jahr; Unternehmenssteuern 30% vs. EU 21%.</p>
+                    <h4>Maßnahmen</h4>
+                    <ul>
+                        <li>One-Stop-Genehmigungen (parallele Verfahren, max. 12 Monate)</li>
+                        <li>Sunset-Clauses (jede Vorschrift 5 Jahre Verfallsdatum, Abbau 25%)</li>
+                        <li>Industriestromverträge (7-10 ct/kWh gegen Standortgarantien)</li>
+                        <li>Unternehmenssteuern reformieren (Körperschaftsteuer 12%, Gesamt ~25%)</li>
+                    </ul>
+                    <div class="goals-box">
+                        <strong>Ziele:</strong> Genehmigung 12 Monate | Investitionen +3% p.a. | Ansiedlungen +30%
+                    </div>
+                </div>
+
+                <!-- Card 7 -->
+                <div class="programm-card">
+                    <h3><span class="card-number">7</span> Schlüsseltechnologien</h3>
+                    <h4>Problemstellung</h4>
+                    <p>Abhängigkeit von Asien bei Chips/Batterien; F&E 3,1% statt 3,5%; De-Industrialisierung droht.</p>
+                    <h4>Maßnahmen</h4>
+                    <ul>
+                        <li>IPCEI Halbleiter/Mikroelektronik (Matching 40:60, Verdopplung Kapazität)</li>
+                        <li>Batteriezell-Offensive: 200 GWh bis 2030, Recycling, Festkörper-Forschung</li>
+                        <li>20 MedTech/CleanTech-Technologietransferzentren</li>
+                        <li>Industriestrategie 2035 (Halbleiter, Batterien, H2, Biotech, Robotik)</li>
+                    </ul>
+                    <div class="goals-box">
+                        <strong>Ziele:</strong> F&E 3,5% | Produktionsanteil 22% | Halbleitermarkt 8%
+                    </div>
+                </div>
+
+                <!-- Card 8 -->
+                <div class="programm-card">
+                    <h3><span class="card-number">8</span> Infrastruktur & Mobilität</h3>
+                    <h4>Problemstellung</h4>
+                    <p>Investitionsstau; Brückensanierung verzögert; ÖPNV-Takt dünn; Deutschlandtakt fehlt.</p>
+                    <h4>Maßnahmen</h4>
+                    <ul>
+                        <li>Deutschlandtakt konsequent umsetzen (integrierter Taktfahrplan)</li>
+                        <li>ÖPNV-Taktverdichtung (10 Min. Städte, 30 Min. ländlich)</li>
+                        <li>Engpassbeseitigung vor Neubau (Verkehrsknoten, Brücken priorisieren)</li>
+                        <li>Investitionsregel nutzen für privilegierte Infrastrukturfinanzierung</li>
+                    </ul>
+                    <div class="goals-box">
+                        <strong>Ziele:</strong> Pünktlichkeit 90% | ÖPNV +30% | Sanierungsstau -50%
+                    </div>
+                </div>
+
+                <!-- Card 9 -->
+                <div class="programm-card">
+                    <h3><span class="card-number">9</span> Sicherheit & Justiz</h3>
+                    <h4>Problemstellung</h4>
+                    <p>Verfahrensdauer zu lang; Resozialisierung unzureichend; Prävention nicht datenbasiert.</p>
+                    <h4>Maßnahmen</h4>
+                    <ul>
+                        <li>Datenbasierte Prävention (Hotspot-Analyse, präventive Sozialarbeit)</li>
+                        <li>Schnellere Verfahren (Justiz +15%, Digitalisierung, -30% Dauer)</li>
+                        <li>Wirksame Resozialisierung (Ausbildung/Therapie, 2 Jahre Nachbetreuung)</li>
+                        <li>Personalaufstockung und moderne IT-Systeme</li>
+                    </ul>
+                    <div class="goals-box">
+                        <strong>Ziele:</strong> Verfahrensdauer -30% | Rückfall -20% | Aufklärung +10pp
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Finanzierung -->
+        <section id="finanzierung" class="scroll-reveal">
+            <h2>Finanzierung</h2>
+            <div class="finanzierung-box">
+                <h3>Gesamtvolumen: ~60-80 Mrd. €/Jahr zusätzlich</h3>
+                <div class="finanzierung-grid">
+                    <div class="finanzierung-item">
+                        <strong>~40 Mrd. €</strong>
+                        <p>Investitionsregel (Reform Schuldenbremse) - zusätzlicher Spielraum für Bildung, Digitalisierung, Infrastruktur, Klimaschutz</p>
+                    </div>
+                    <div class="finanzierung-item">
+                        <strong>~10-15 Mrd. €</strong>
+                        <p>Entbürokratisierung - Einsparung durch Sunset-Clauses, Abbau 25% der Vorschriften, effizientere Verwaltung</p>
+                    </div>
+                    <div class="finanzierung-item">
+                        <strong>~20-40 Mrd. €</strong>
+                        <p>Wachstumseffekte - Steuermehreinnahmen durch +0,5-1% BIP zusätzliches Wachstum</p>
+                    </div>
+                    <div class="finanzierung-item">
+                        <strong>~2-3 Mrd. €</strong>
+                        <p>Branchenfonds - Arbeitgeber-Umlage 0,5% Lohnsumme für Ausbildung und Weiterbildung</p>
+                    </div>
+                </div>
+                <div style="margin-top: 2rem; padding: 1.5rem; background: rgba(255,255,255,0.1); border-radius: 10px;">
+                    <strong style="color: var(--accent-cyan); font-size: 1.3rem;">Transparenzgebot:</strong>
+                    <p style="margin-top: 0.5rem;">Alle Maßnahmen werden mit messbaren KPIs (Key Performance Indicators) versehen und jährlich evaluiert. Bei Nichterreichen der Ziele erfolgt Anpassung oder Einstellung der Maßnahme.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Werte -->
+        <section id="werte" class="scroll-reveal">
+            <h2>Unsere Werte</h2>
+            <div class="werte-grid">
+                <div class="wert-card">
+                    <div class="wert-icon">🤝</div>
+                    <h3>Gemeinschaft</h3>
+                    <p>Zusammenhalt durch faire Teilhabe, soziale Sicherheit und Chancengerechtigkeit. Niemand wird zurückgelassen, aber alle tragen bei – durch Arbeit, Qualifizierung oder gesellschaftliches Engagement.</p>
+                </div>
+                <div class="wert-card">
+                    <div class="wert-icon">🚀</div>
+                    <h3>Progress</h3>
+                    <p>Innovation, Wissenschaft und Digitalisierung sind die Grundlagen für Wohlstand und Zukunftsfähigkeit. Wir investieren in Bildung, Forschung und Infrastruktur – mit messbaren Zielen und transparenter Erfolgskontrolle.</p>
+                </div>
+                <div class="wert-card">
+                    <div class="wert-icon">⚡</div>
+                    <h3>Tatkraft</h3>
+                    <p>Politische Entscheidungen müssen umgesetzt werden – verlässlich, transparent und effizient. Wir setzen auf klare Verantwortlichkeiten, kurze Entscheidungswege und konsequente Planungsbeschleunigung.</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p style="font-size: 0.9rem; opacity: 0.8;"><em>Mitglieder: Julius · Kai · Malte · Constantin · Karl · Jonathan</em></p>
+        <p style="font-size: 1.3rem; font-weight: bold; margin: 1rem 0;">GPT Partei – Gemeinschaft · Progress · Tatkraft</p>
+        <p style="font-style: italic;">Pragmatisch · Datenorientiert · Solidarisch</p>
+    </footer>
+
+    <script>
+        // Scroll Reveal Animation
+        function reveal() {
+            const reveals = document.querySelectorAll('.scroll-reveal');
+            
+            reveals.forEach(element => {
+                const windowHeight = window.innerHeight;
+                const elementTop = element.getBoundingClientRect().top;
+                const elementVisible = 150;
+                
+                if (elementTop < windowHeight - elementVisible) {
+                    element.classList.add('active');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', reveal);
+        reveal(); // Initial check
+
+        // Smooth scroll to top
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Parallax effect for hero
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const hero = document.querySelector('.hero');
+            if (hero) {
+                hero.style.transform = `translateY(${scrolled * 0.5}px)`;
+            }
+        });
+
+        // Card click effect
+        document.querySelectorAll('.programm-card').forEach(card => {
+            card.addEventListener('click', function() {
+                this.style.transform = 'scale(0.98)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 200);
+            });
+        });
+    </script>
+</body>
+</html>

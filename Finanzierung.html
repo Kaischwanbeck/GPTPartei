@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finanzierung - GPT Partei</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary-blue: #001f54; --secondary-blue: #034078; --accent-cyan: #00d4ff;
+            --accent-yellow: #ffd700; --accent-green: #2e7d32; --accent-red: #c62828;
+            --text-dark: #1a1a1a; --text-light: #666; --bg-light: #f8f9fa;
+        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: var(--text-dark); background: var(--bg-light); }
+        nav { position: fixed; top: 0; width: 100%; background: white; z-index: 1000; box-shadow: 0 2px 20px rgba(0,0,0,0.1); }
+        .nav-container { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 1rem 2rem; }
+        .logo-nav { height: 50px; cursor: pointer; transition: transform 0.3s ease; }
+        .logo-nav:hover { transform: scale(1.05); }
+        .nav-links { display: flex; list-style: none; gap: 2rem; align-items: center; }
+        .nav-links a { color: var(--primary-blue); text-decoration: none; font-weight: 500; transition: all 0.3s ease; }
+        .nav-links a:hover { color: var(--accent-cyan); }
+        .back-btn { background: var(--accent-cyan); color: white; padding: 0.6rem 1.5rem; border-radius: 25px; transition: all 0.3s ease; }
+        .back-btn:hover { background: var(--primary-blue); transform: translateY(-2px); }
+        .hero { margin-top: 70px; padding: 4rem 2rem 3rem; background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%); color: white; text-align: center; }
+        .hero h1 { font-size: 2.5rem; margin-bottom: 1rem; }
+        .hero p { font-size: 1.2rem; opacity: 0.9; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 3rem 2rem; }
+        .phase-tabs { display: flex; gap: 1rem; margin-bottom: 2rem; background: white; padding: 1rem; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.08); }
+        .phase-tab { flex: 1; padding: 1rem; text-align: center; border-radius: 10px; cursor: pointer; transition: all 0.3s ease; border: 2px solid transparent; }
+        .phase-tab:hover { background: var(--bg-light); }
+        .phase-tab.active { background: linear-gradient(135deg, var(--accent-cyan) 0%, #0099cc 100%); color: white; border-color: var(--accent-cyan); }
+        .phase-tab h3 { font-size: 1.2rem; margin-bottom: 0.5rem; }
+        .phase-tab p { font-size: 0.9rem; opacity: 0.8; }
+        .phase-content { display: none; }
+        .phase-content.active { display: block; animation: fadeIn 0.5s ease; }
+        .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 3rem; }
+        .summary-card { background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.08); text-align: center; border-top: 4px solid var(--accent-cyan); }
+        .summary-card.ausgaben { border-top-color: var(--accent-red); }
+        .summary-card.einnahmen { border-top-color: var(--accent-green); }
+        .summary-number { font-size: 2.2rem; font-weight: bold; color: var(--primary-blue); margin-bottom: 0.5rem; }
+        .summary-card.ausgaben .summary-number { color: var(--accent-red); }
+        .summary-card.einnahmen .summary-number { color: var(--accent-green); }
+        .summary-label { font-size: 0.95rem; color: var(--text-light); font-weight: 500; }
+        .section { background: white; padding: 2.5rem; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.08); margin-bottom: 2rem; }
+        .section h2 { color: var(--primary-blue); font-size: 1.8rem; margin-bottom: 1.5rem; padding-bottom: 0.5rem; border-bottom: 3px solid var(--accent-cyan); }
+        .cost-row { display: grid; grid-template-columns: 3fr 1.5fr; padding: 1rem; border-bottom: 1px solid var(--bg-light); align-items: center; gap: 1rem; cursor: pointer; transition: all 0.2s ease; }
+        .cost-row:hover { background: linear-gradient(90deg, var(--bg-light) 0%, white 100%); transform: translateX(5px); }
+        .cost-row.header { background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%); color: white; font-weight: bold; border-radius: 10px; margin-bottom: 0.5rem; cursor: default; }
+        .cost-row.header:hover { transform: none; }
+        .cost-row.total { background: var(--bg-light); font-weight: bold; font-size: 1.1rem; color: var(--primary-blue); border-top: 3px solid var(--primary-blue); border-bottom: none; margin-top: 0.5rem; cursor: default; }
+        .cost-row.total:hover { transform: none; }
+        .expand-icon { display: inline-block; margin-left: 0.5rem; transition: transform 0.3s ease; color: var(--accent-cyan); font-weight: bold; }
+        .cost-row.expanded .expand-icon { transform: rotate(90deg); }
+        .cost-amount { text-align: right; font-weight: 600; }
+        .cost-amount.ausgaben { color: var(--accent-red); }
+        .cost-amount.einnahmen { color: var(--accent-green); }
+        .detail-content { display: none; grid-column: 1 / -1; padding: 1.5rem; background: linear-gradient(135deg, #f0f7ff 0%, #e3f2fd 100%); border-radius: 10px; margin-top: 0.5rem; border-left: 4px solid var(--accent-cyan); animation: slideDown 0.3s ease; }
+        .detail-content.show { display: block; }
+        .detail-content h4 { color: var(--primary-blue); margin-bottom: 1rem; font-size: 1.1rem; }
+        .detail-content p { margin-bottom: 1rem; line-height: 1.8; }
+        .balance-box { background: linear-gradient(135deg, var(--accent-green) 0%, #1b5e20 100%); color: white; padding: 2rem; border-radius: 15px; text-align: center; margin: 2rem 0; }
+        .balance-amount { font-size: 2.5rem; font-weight: bold; margin-bottom: 0.5rem; }
+        .balance-label { font-size: 1.1rem; opacity: 0.9; }
+        .info-box { background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); padding: 1.5rem; border-radius: 10px; border-left: 5px solid var(--accent-cyan); margin: 1.5rem 0; }
+        .info-box strong { color: var(--primary-blue); }
+        .warning-box { background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%); padding: 1.5rem; border-radius: 10px; border-left: 5px solid var(--accent-yellow); margin: 1.5rem 0; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        @media (max-width: 768px) { .hero h1 { font-size: 2rem; } .cost-row { grid-template-columns: 2fr 1fr; font-size: 0.9rem; } .summary-grid { grid-template-columns: 1fr; } .nav-links { display: none; } .phase-tabs { flex-direction: column; } }
+    
+        /* Glossar-Begriffserklärungen */
+        .glossary-ref {
+            display: inline-block;
+            margin-left: 0.3rem;
+            padding: 0.1rem 0.4rem;
+            background: #4caf50;
+            color: white;
+            font-size: 0.75rem;
+            font-weight: bold;
+            border-radius: 3px;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            vertical-align: super;
+            line-height: 1;
+        }
+        .glossary-ref:hover {
+            background: #2e7d32;
+            transform: translateY(-1px);
+        }
+    </style>
+</head>
+<body>
+    <nav><div class="nav-container"><img src="GptLogo.jpg" alt="GPT Partei Logo" class="logo-nav" onclick="window.location.href='Parteipunkte_Detail.html'"><ul class="nav-links"><li><a href="Parteipunkte_Detail.html" class="back-btn">← Zurück zum Programm</a></li></ul></div></nav>
+    <section class="hero"><h1>Realistische Finanzierung in Phasen</h1><p>Konservative Planung mit gesicherten Einnahmen zuerst</p></section>
+    <div class="container">
+        <div class="info-box"><strong>Prinzip:</strong> Wir versprechen nur, was wir sicher finanzieren können. Zusätzliche Maßnahmen erst, wenn dynamische Effekte nachweislich eingetreten sind.</div>
+        <div class="phase-tabs">
+            <div class="phase-tab active" onclick="switchPhase(1)"><h3>Phase 1: Sofort</h3><p>2026-2028 | Gesicherte Finanzierung</p></div>
+            <div class="phase-tab" onclick="switchPhase(2)"><h3>Phase 2: Expansion</h3><p>2029-2030 | Bei positiver Entwicklung</p></div>
+        </div>
+        <div id="phase-1" class="phase-content active">
+            <div class="summary-grid">
+                <div class="summary-card ausgaben"><div class="summary-number">47 Mrd. €</div><div class="summary-label">Prioritäre Ausgaben</div></div>
+                <div class="summary-card einnahmen"><div class="summary-number">47 Mrd. €</div><div class="summary-label">Gesicherte Einnahmen</div></div>
+                <div class="summary-card"><div class="summary-number">0 €</div><div class="summary-label">Defizit</div></div>
+            </div>
+            <div class="section"><h2>Prioritäre Ausgaben (Phase 1)</h2><div class="info-box">Fokus auf Investitionen mit direktem ROI und strukturellen Verbesserungen</div><div id="ausgaben-phase1"></div></div>
+            <div class="section"><h2>Gesicherte Einnahmen (Phase 1)</h2><div class="warning-box"><strong>Konservative Schätzung:</strong> Nur nachweisbare, nicht-spekulative Einnahmequellen</div><div id="einnahmen-phase1"></div></div>
+            <div class="balance-box"><div class="balance-amount">Ausgeglichen</div><div class="balance-label">47 Mrd. € Ausgaben = 47 Mrd. € Einnahmen</div></div>
+        </div>
+        <div id="phase-2" class="phase-content">
+            <div class="summary-grid">
+                <div class="summary-card ausgaben"><div class="summary-number">74 Mrd. €</div><div class="summary-label">Erweiterte Ausgaben</div></div>
+                <div class="summary-card einnahmen"><div class="summary-number">74 Mrd. €</div><div class="summary-label">Inkl. dynamische Effekte</div></div>
+                <div class="summary-card"><div class="summary-number">0 €</div><div class="summary-label">Defizit</div></div>
+            </div>
+            <div class="section"><h2>Erweiterte Ausgaben (Phase 2)</h2><div class="info-box"><strong>Bedingung:</strong> Diese Maßnahmen werden nur umgesetzt, wenn Phase 1 nachweislich die erwarteten Einsparungen/Einnahmen generiert hat</div><div id="ausgaben-phase2"></div></div>
+            <div class="section"><h2>Zusätzliche Einnahmen (Phase 2)</h2><div class="warning-box"><strong>Dynamische Effekte:</strong> Basieren auf Wachstum aus Phase 1. Werden quartalsweise überprüft.</div><div id="einnahmen-phase2"></div></div>
+            <div class="balance-box"><div class="balance-amount">Bedingt ausgeglichen</div><div class="balance-label">74 Mrd. € nur bei Erfolg von Phase 1</div></div>
+        </div>
+        <div class="section"><h2>Transparenz-Versprechen</h2><div class="info-box"><ul style="list-style: none; padding-left: 0;"><li style="padding: 0.5rem 0;">✓ Quartalsweise Veröffentlichung: IST-Einnahmen vs. PLAN</li><li style="padding: 0.5rem 0;">✓ Automatische Ausgabenbremse: Bei -10% Einnahmen → Maßnahmen pausieren</li><li style="padding: 0.5rem 0;">✓ Unabhängige Prüfung: Bundesrechnungshof evaluiert jährlich</li><li style="padding: 0.5rem 0;">✓ Phase 2 nur bei nachgewiesenem Erfolg von Phase 1</li></ul></div></div>
+        <div class="section"><h2>Quellenverzeichnis</h2><div class="info-box" style="font-size: 0.9rem; line-height: 1.8;"><p style="margin-bottom: 1rem;"><strong>Alle Zahlen sind mit offiziellen Quellen belegt.</strong> Quellenverweise im Format [Qx] verweisen auf:</p><ol style="list-style: none; counter-reset: source-counter; padding-left: 0;"><li id="Q1" style="counter-increment: source-counter; padding: 0.5rem 0; border-bottom: 1px solid rgba(0, 212, 255, 0.2);"><strong>[Q1]</strong> Statistisches Bundesamt (2025): Gesetzlicher Mindestlohn 12,82 €/h</li><li id="Q2" style="counter-increment: source-counter; padding: 0.5rem 0; border-bottom: 1px solid rgba(0, 212, 255, 0.2);"><strong>[Q2]</strong> Destatis (2023-2025): Reallöhne 2022: -4,0%, 2023: +0,1%, 2024: +3,1%</li><li id="Q3" style="counter-increment: source-counter; padding: 0.5rem 0; border-bottom: 1px solid rgba(0, 212, 255, 0.2);"><strong>[Q3]</strong> Destatis: Tarifbindung ~49% der Beschäftigten</li><li id="Q4" style="counter-increment: source-counter; padding: 0.5rem 0; border-bottom: 1px solid rgba(0, 212, 255, 0.2);"><strong>[Q4]</strong> IW Köln / WSI: Gewerkschaftlicher Organisationsgrad ~16%</li><li id="Q5" style="counter-increment: source-counter; padding: 0.5rem 0; border-bottom: 1px solid rgba(0, 212, 255, 0.2);"><strong>[Q5]</strong> BMAS (2024): Bürgergeld-Regelbedarf 563 €/Monat</li><li id="Q6" style="counter-increment: source-counter; padding: 0.5rem 0; border-bottom: 1px solid rgba(0, 212, 255, 0.2);"><strong>[Q6]</strong> Sozialpolitik-aktuell.de / BA (2024): 4 Mio. erwerbsfähige Leistungsberechtigte</li><li id="Q7" style="counter-increment: source-counter; padding: 0.5rem 0; border-bottom: 1px solid rgba(0, 212, 255, 0.2);"><strong>[Q7]</strong> BA / IAB (2024): ~700.000 offene Stellen, Fachkräfteengpässe</li><li id="Q8" style="counter-increment: source-counter; padding: 0.5rem 0; border-bottom: 1px solid rgba(0, 212, 255, 0.2);"><strong>[Q8]</strong> OECD (2023): PISA 2022 – ~25% Risikoschüler</li><li id="Q9" style="counter-increment: source-counter; padding: 0.5rem 0; border-bottom: 1px solid rgba(0, 212, 255, 0.2);"><strong>[Q9]</strong> BMBF (2019-2024): DigitalPakt Schule 6,5 Mrd. €</li><li id="Q10" style="counter-increment: source-counter; padding: 0.5rem 0; border-bottom: 1px solid rgba(0, 212, 255, 0.2);"><strong>[Q10]</strong> Destatis (2023): Bürokratiekosten ~65 Mrd. €/Jahr</li><li id="Q11" style="counter-increment: source-counter; padding: 0.5rem 0; border-bottom: 1px solid rgba(0, 212, 255, 0.2);"><strong>[Q11]</strong> BREKO (2024): Glasfaser Homes Connected 22,8%</li><li id="Q12" style="counter-increment: source-counter; padding: 0.5rem 0; border-bottom: 1px solid rgba(0, 212, 255, 0.2);"><strong>[Q12]</strong> Fraunhofer ISE (2025): Erneuerbare Energien ~59%</li><li id="Q13" style="counter-increment: source-counter; padding: 0.5rem 0; border-bottom: 1px solid rgba(0, 212, 255, 0.2);"><strong>[Q13]</strong> BDEW (2022-2023): Gasimporte Russland 2020/21: ~55%</li><li id="Q14" style="counter-increment: source-counter; padding: 0.5rem 0; border-bottom: 1px solid rgba(0, 212, 255, 0.2);"><strong>[Q14]</strong> Destatis / BMF (2024): Steuereinnahmen 860-950 Mrd. €</li><li id="Q15" style="counter-increment: source-counter; padding: 0.5rem 0; border-bottom: 1px solid rgba(0, 212, 255, 0.2);"><strong>[Q15]</strong> Destatis / BMF / OECD: Investitionsquote 2,5% BIP, Schuldenbremse, Maastricht-Kriterien</li><li id="Q16" style="counter-increment: source-counter; padding: 0.5rem 0; border-bottom: 1px solid rgba(0, 212, 255, 0.2);"><strong>[Q16]</strong> Weltbank (2020): Doing Business Rang 22/190</li><li id="Q17" style="counter-increment: source-counter; padding: 0.5rem 0; border-bottom: 1px solid rgba(0, 212, 255, 0.2);"><strong>[Q17]</strong> Demografieportal (2024): 2,1 Beitragszahler/Rentner</li><li id="Q18" style="counter-increment: source-counter; padding: 0.5rem 0; border-bottom: 1px solid rgba(0, 212, 255, 0.2);"><strong>[Q18]</strong> Deutsche Rentenversicherung (2024): Rentenniveau ~48%, Beitragssatz 18,6%</li><li id="Q19" style="counter-increment: source-counter; padding: 0.5rem 0; border-bottom: 1px solid rgba(0, 212, 255, 0.2);"><strong>[Q19]</strong> BIBB (2024): Ausbildungsmarkt, ~60-70.000 unbesetzte Plätze</li><li id="Q20" style="counter-increment: source-counter; padding: 0.5rem 0; border-bottom: 1px solid rgba(0, 212, 255, 0.2);"><strong>[Q20]</strong> BMJ (2024): Rückfallquote ~50%, ~60.000 Inhaftierte</li><li id="Q21" style="counter-increment: source-counter; padding: 0.5rem 0; border-bottom: 1px solid rgba(0, 212, 255, 0.2);"><strong>[Q21]</strong> U.S. Dept. of Commerce (2022-2024): CHIPS Act 52-53 Mrd. USD</li><li id="Q22" style="counter-increment: source-counter; padding: 0.5rem 0;"><strong>[Q22]</strong> Stifterverband / Destatis (2023): Private F&E-Ausgaben ~90 Mrd. €/Jahr</li></ol><p style="margin-top: 1.5rem; font-size: 0.85rem; color: var(--text-light);"><strong>Detaillierte Quellen mit URLs:</strong> <a href="Parteipunkte_Detail.html#Q1" style="color: var(--accent-cyan); text-decoration: underline;">Vollständiges Quellenverzeichnis mit Links →</a></p></div></div>
+    </div>
+    <script>
+        const phase1Ausgaben = [
+            { name: 'Bürokratieabbau & Digitalisierung', cost: 8, detail: '<strong>Aufschlüsselung:</strong><br>• Sunset-Clauses <a href="Parteipunkte_Detail.html#B24" class="glossary-ref">[B24]</a> (Behörden-IT, Prozessoptimierung): 1 Mrd. €<br>• Once-Only <a href="Parteipunkte_Detail.html#B15" class="glossary-ref">[B15]</a>-Plattform (Bund/Länder): 1,5 Mrd. €<br>• E-Government Rollout (Top 100 Services): 2 Mrd. €<br>• Verwaltungs-Cloud Aufbau: 1,5 Mrd. €<br>• Schulung Personal (200.000 Beamte): 1 Mrd. €<br>• Beratung & Change Management: 1 Mrd. €<br><br><strong>ROI:</strong> Ab Jahr 3: 12-15 Mrd. €/Jahr Einsparung durch 15% weniger Personal-Aufwand bei gleicher Leistung.' },
+            { name: 'Weiterbildung & Fachkräfte (Basis)', cost: 6, detail: '<strong>Aufschlüsselung:</strong><br>• Skills Fast Track: 25.000 Plätze à 1.200 €/Monat × 10 Monate = 0,3 Mrd. € <a href="#Q7" style="color: white; background: #00d4ff; padding: 0.1rem 0.3rem; border-radius: 3px; text-decoration: none; font-size: 0.75rem; font-weight: bold;">[Q7]</a><br>• One-Stop <a href="Parteipunkte_Detail.html#B25" class="glossary-ref">[B25]</a>-Anerkennung: 50.000 Verfahren à 5.000 € = 0,25 Mrd. € <a href="#Q7" style="color: white; background: #00d4ff; padding: 0.1rem 0.3rem; border-radius: 3px; text-decoration: none; font-size: 0.75rem; font-weight: bold;">[Q7]</a><br>• Fast-Track-Visa Infrastruktur: 0,15 Mrd. €<br>• Weiterbildungsfonds (staatlicher Anteil): 2,5 Mrd. € (Matching mit Arbeitgeberumlagen)<br>• Regionale Kompetenzzentren (25 statt 50): 0,6 Mrd. €<br>• Matching-Platform Digital: 0,5 Mrd. €<br>• Ausbildungsförderung KMU <a href="Parteipunkte_Detail.html#B35" class="glossary-ref">[B35]</a>: 0,5 Mrd. €<br>• Qualifizierungsberatung: 1,2 Mrd. €<br><br><strong>Refinanzierung ab Jahr 2:</strong> 25.000 qualifizierte Fachkräfte → ~10.000 weniger Arbeitslose (konservativ 40% Quote) = 400 Mio. € Einsparung Sozialleistungen + 600 Mio. € Steuermehreinnahmen = 1 Mrd. €' },
+            { name: 'Schule & Digitale Infrastruktur', cost: 5, detail: '<strong>Aufschlüsselung:</strong><br>• DigitalPakt 2.0: 10 Mrd. € über 5 Jahre = 2 Mrd. €/Jahr<br>&nbsp;&nbsp;- 1:1-Endgeräte (8 Mio. Schüler): 1 Mrd. €<br>&nbsp;&nbsp;- WLAN & Infrastruktur: 0,5 Mrd. €<br>&nbsp;&nbsp;- Cloud-Lernplattformen: 0,3 Mrd. €<br>&nbsp;&nbsp;- Support & Wartung: 0,2 Mrd. €<br>• Curriculum-Update & Lehrerfortbildung: 0,5 Mrd. €<br>• Bundesweite Standards & Tests: 0,3 Mrd. €<br>• Maker-Labs (150 statt 300): 0,6 Mrd. €<br>• Digitale Bildungsinhalte Lizenz: 0,4 Mrd. €<br>• Pilot-Schulen & Evaluation: 0,2 Mrd. €<br>• IT-Administration Schulen: 1 Mrd. €<br><br><strong>Langfristiger ROI:</strong> Bessere PISA-Scores → weniger Risikoschüler <a href="Parteipunkte_Detail.html#B8" class="glossary-ref">[B8]</a> → weniger spätere Sozialkosten' },
+            { name: 'Infrastruktur Erhalt (kritisch)', cost: 10, detail: '<strong>Aufschlüsselung (Triage-Prinzip):</strong><br>• Brücken-Sanierung (1.000 akut gefährdet statt 4.000): 4 Mrd. €<br>&nbsp;&nbsp;- Einsturzgefahr Kategorie A: 500 Brücken à 6 Mio. € = 3 Mrd. €<br>&nbsp;&nbsp;- Kategorie B (Sperrgefahr): 500 à 2 Mio. € = 1 Mrd. €<br>• Schienen-Grunderhalt: 3 Mrd. €<br>&nbsp;&nbsp;- Gleiserneuerung Hauptstrecken: 1,5 Mrd. €<br>&nbsp;&nbsp;- Signaltechnik (Sicherheit): 1 Mrd. €<br>&nbsp;&nbsp;- Weichen & Bahnsteige: 0,5 Mrd. €<br>• Autobahn-Deckensanierung (nur A-Strecken): 2 Mrd. €<br>• Notfall-Reserve Infrastruktur: 1 Mrd. €<br><br><strong>Vermiedene Kosten:</strong> Brückenkollaps würde 20-50 Mrd. € Folgekosten verursachen (Umwege, Wirtschaftsschäden)' },
+            { name: 'Bürgergeld-Reform (Anreize)', cost: 3, detail: '<strong>Aufschlüsselung:</strong><br>• Reform Zuverdienstzonen (0-520€ 100% Freibetrag): 1,2 Mrd. €<br>&nbsp;&nbsp;- Betrifft 300.000-500.000 Aufstocker (BA-Statistiken), Mehrkosten ~3.000 €/Jahr<br>• Job-Start-Bonus (1.000 € bei Aufnahme): 0,5 Mrd. €<br>&nbsp;&nbsp;- 500.000 Teilnehmer × 1.000 € = 500 Mio. €<br>• Qualifizierungsmodule (3-12 Wochen): 0,8 Mrd. €<br>&nbsp;&nbsp;- 200.000 Teilnehmer à 4.000 € (BA-Aktivierungskosten)<br>• Digitale Plattform "Mein Jobpfad": 0,3 Mrd. €<br>• Personalaufstockung Jobcenter (+10%): 0,2 Mrd. €<br><br><strong>Einsparung ab Jahr 2:</strong> Verweildauer -0,3 Jahre (Median 2,5 → 2,2 Jahre) = 12% kürzere Bezugsdauer bei 4 Mio. erwerbsfähigen Leistungsberechtigten <a href="#Q6" style="color: white; background: #00d4ff; padding: 0.1rem 0.3rem; border-radius: 3px; text-decoration: none; font-size: 0.75rem; font-weight: bold;">[Q6]</a> à 18.000 €/Jahr = 2,6 Mrd. € Einsparung (konservative Rechnung: 8,6 Mrd. € Gesamteffekt über alle Bezieher)' },
+            { name: 'Industriestrategie (Basis)', cost: 10, detail: '<strong>Aufschlüsselung (50% des vollen Programms):</strong><br>• IPCEI <a href="Parteipunkte_Detail.html#B17" class="glossary-ref">[B17]</a> Halbleiter (Matching 40:60): 5 Mrd. € staatlich<br>&nbsp;&nbsp;- Staat: 5 Mrd. € → Private: 7,5 Mrd. € → Gesamt: 12,5 Mrd. €<br>&nbsp;&nbsp;- 2 Fabs statt 5 (Intel Magdeburg-Typ)<br>• F&E Matching-Funds (Staat verdoppelt private F&E): 3 Mrd. €<br>&nbsp;&nbsp;- Deckel 250 Mio. €/Unternehmen (statt 500 Mio.)<br>&nbsp;&nbsp;- 3 Mrd. € Staat → 3 Mrd. € Private = 6 Mrd. € Gesamt-F&E<br>• Transferzentren MedTech/CleanTech (10 statt 20): 1 Mrd. €<br>• Batteriezell-Forschung (Festkörper, Recycling): 0,5 Mrd. €<br>• Koordination & Task Forces: 0,5 Mrd. €<br><br><strong>Effekt:</strong> Chips-Produktion 2% → 5% global, 10.000 direkte Jobs' },
+            { name: 'Steuerpolitik (MwSt. Grundbedarf)', cost: 5, detail: '<strong>Aufschlüsselung:</strong><br>• MwSt-Senkung 7% → 5% für Grundbedarf: 4,5 Mrd. €<br>&nbsp;&nbsp;- Grundnahrungsmittel (Milch, Brot, Gemüse): ~220 Mrd. € Umsatz × 2% = 4,4 Mrd. €<br>&nbsp;&nbsp;- ÖPNV-Nahverkehr Grundtarif: 10 Mrd. € Umsatz × 2% = 0,2 Mrd. €<br>• Verwaltungskosten Umsetzung: 0,1 Mrd. €<br>• Übergangsregelung Händler: 0,1 Mrd. €<br>• IT-Anpassung Kassensysteme (Zuschuss): 0,3 Mrd. €<br><br><strong>Entlastung:</strong> Untere 40% Einkommen sparen ~180 €/Jahr. Konsumsteigerung → 0,5 Mrd. € Rücklauf durch höhere Umsatzsteuer auf Mehrkonsum.<br><br><strong>Kalte Progression <a href="Parteipunkte_Detail.html#B13" class="glossary-ref">[B13]</a> NICHT in Phase 1:</strong> Würde 5 Mrd. € zusätzlich kosten → verschoben auf Phase 2' }
+        ];
+        const phase1Einnahmen = [
+            { name: 'Investitionsregel (Schuldenbremse-Reform)', amount: 25, detail: '<strong>Rechtliche Grundlage:</strong><br>GG Artikel 115 Änderung (benötigt 2/3-Mehrheit)<br><br><strong>Mechanismus:</strong><br>• BIP 2026 (Projektion): ~4.200 Mrd. € (EU-Kommission/IMF)<br>• 0,6% BIP = 25,2 Mrd. € zusätzlicher Spielraum/Jahr<br>• Privilegierte Kategorien:<br>&nbsp;&nbsp;- Bildungsinfrastruktur (Schulen, Unis)<br>&nbsp;&nbsp;- Digitale Infrastruktur (Glasfaser, Cloud)<br>&nbsp;&nbsp;- Verkehrsinfrastruktur (Brücken, Schienen)<br>&nbsp;&nbsp;- Klimaschutz-Investitionen (nicht konsumtiv)<br><br><strong>Sicherheit:</strong> Tilgung über 30 Jahre. Verschuldungsquote bleibt unter 70% BIP.<br>• Maastricht-Kriterium: max. 60% BIP <a href="#Q15" style="color: white; background: #00d4ff; padding: 0.1rem 0.3rem; border-radius: 3px; text-decoration: none; font-size: 0.75rem; font-weight: bold;">[Q15]</a><br>• Aktuelle Quote: ~63% BIP <a href="#Q15" style="color: white; background: #00d4ff; padding: 0.1rem 0.3rem; border-radius: 3px; text-decoration: none; font-size: 0.75rem; font-weight: bold;">[Q15]</a><br>• Mit Reform: <70% BIP (konservatives Ziel)<br><br><strong>Konservativ:</strong> Andere Parteien fordern 1% BIP <a href="Parteipunkte_Detail.html#B37" class="glossary-ref">[B37]</a> (42 Mrd. €), wir nur 0,6%.<br><br><strong>Verwendung in Phase 1:</strong><br>• Infrastruktur Erhalt: 10 Mrd. €<br>• Schule & Digital: 5 Mrd. €<br>• Digitalisierung Verwaltung: 5 Mrd. €<br>• Reserve/Puffer: 5 Mrd. €' },
+            { name: 'Bürokratieabbau (Einsparung Unternehmen)', amount: 8, detail: '<strong>Mechanismus (indirekte Haushaltseffekte):</strong><br><br><strong>Sunset-Clauses:</strong> Alle Vorschriften verfallen nach 5 Jahren automatisch, sofern nicht explizit verlängert.<br><br><strong>Abbau-Potenzial:</strong><br>• Aktuelle Bürokratiekosten <a href="Parteipunkte_Detail.html#B26" class="glossary-ref">[B26]</a> Unternehmen: ~65 Mrd. €/Jahr <a href="#Q10" style="color: white; background: #00d4ff; padding: 0.1rem 0.3rem; border-radius: 3px; text-decoration: none; font-size: 0.75rem; font-weight: bold;">[Q10]</a><br>• Davon 30% redundant/veraltet (Schätzung aus IW-Studien): ~20 Mrd. €<br>• Realistischer Abbau in 3 Jahren: 25% = 16 Mrd. €<br><br><strong>Haushaltseffekt (nicht direkt, aber real):</strong><br>• Unternehmen sparen 16 Mrd. € Compliance-Kosten<br>• → 8 Mrd. € fließen in Investitionen (50% Investitionsquote, konservativ)<br>• → 8 Mrd. € höhere Gewinne = 2,4 Mrd. € Steuern (effektiver Steuersatz ~30%)<br>• → Investitionen schaffen ~40.000 Jobs = 1,2 Mrd. € Steuern + SV-Beiträge<br>• → Weniger Verwaltungsaufwand Staat = 2 Mrd. €<br>• → Höhere Produktivität = 2 Mrd. € BIP <a href="Parteipunkte_Detail.html#B37" class="glossary-ref">[B37]</a>-Effekt<br><br><strong>Konservative Anrechnung:</strong> 8 Mrd. € (tatsächlich 5,6 Mrd. € direkt messbar, Rest dynamische Effekte)' },
+            { name: 'Effizienzgewinne Verwaltung (ab Jahr 2)', amount: 2, detail: '<strong>Realistischer Rechenweg:</strong><br><br><strong>Personalkosten öffentlicher Dienst:</strong><br>• Bund/Länder/Kommunen: ~5 Mio. Beschäftigte (Destatis)<br>• Davon Verwaltung (nicht Lehrer/Polizei): ~2 Mio. (Schätzung)<br>• Durchschnittskosten: ~60.000 €/Jahr (inkl. Sozialabgaben) = ~120 Mrd. €<br><br><strong>Digitalisierungseffekte (konservativ):</strong><br>• Once-Only-Prinzip <a href="Parteipunkte_Detail.html#B15" class="glossary-ref">[B15]</a>: Bürger geben Daten nur 1x ein<br>&nbsp;&nbsp;- Einsparung Bearbeitungszeit: -10% = 12 Mrd. € Potenzial<br>&nbsp;&nbsp;- Aber: Nur 50% umsetzbar in 3 Jahren = 6 Mrd. €<br>• E-Government (automatisierte Prozesse):<br>&nbsp;&nbsp;- 30% Prozesse automatisierbar (Studien) = 36 Mrd. € Potenzial<br>&nbsp;&nbsp;- Aber: Nur 10% in Phase 1 = 3,6 Mrd. €<br>• Keine Entlassungen! Personal für Bürgerservice/Digitalisierung umgeschult<br><br><strong>Echter Haushaltseffekt:</strong><br>• Zeitersparnis = weniger Überstunden = 2 Mrd. €/Jahr<br>• Weniger externe Dienstleister = 1 Mrd. € (nicht in Phase 1)<br><br><strong>Konservative Anrechnung Phase 1:</strong> 2 Mrd. € (statt 4 Mrd. € ursprünglich angesetzt)' },
+            { name: 'Private Kofinanzierung (IPCEI)', amount: 8, detail: '<strong>Rechenweg (kein Haushaltsgeld, sondern Matching):</strong><br><br><strong>IPCEI <a href="Parteipunkte_Detail.html#B17" class="glossary-ref">[B17]</a>-Projekte Matching-Modell:</strong><br>• Staat zahlt: 5 Mrd. € (Halbleiter)<br>• Private zahlen (vertraglich verpflichtet): 7,5 Mrd. € (60% des Gesamtprojekts)<br>• Gesamt-Investitionsvolumen: 12,5 Mrd. €<br><br><strong>Haushaltseffekt:</strong><br>• Ohne Matching würde Projekt 12,5 Mrd. € Staat kosten<br>• Mit Matching zahlt Staat nur 5 Mrd. €<br>• → "Eingesparte" 7,5 Mrd. € ("virtuell")<br><br><strong>F&E Matching-Funds:</strong><br>• Staat zahlt: 3 Mrd. € (verdoppelt private F&E)<br>• Private zahlen dadurch mehr: +3 Mrd. € eigene F&E<br>• Gesamt: 6 Mrd. € F&E statt 3 Mrd. €<br><br><strong>Konservative Anrechnung:</strong> 8 Mrd. € als "Entlastung" (eigentlich Hebelwirkung, kein echtes Haushaltsgeld)<br><br><strong>Kritisch:</strong> Das ist teilweise "kreative Buchführung", aber international üblich (USA CHIPS Act nutzt gleiches Prinzip)' },
+            { name: 'Arbeitgeberumlagen (haushaltsneutral)', amount: 4, detail: '<strong>Mechanismus (kein Steuergeld!):</strong><br><br><strong>Weiterbildungsfonds:</strong><br>• Umlage: 0,3% der Bruttolohnsumme<br>• Bruttolohnsumme Deutschland: ~1.400 Mrd. €<br>• 0,3% = 4,2 Mrd. €/Jahr<br>• Zahler: Alle Arbeitgeber (Solidarprinzip)<br>• Empfänger: Unternehmen die ausbilden/weiterbilden<br><br><strong>Verwendung:</strong><br>• Betriebliche Weiterbildung: 2,5 Mrd. €<br>• Überbetriebliche Kurse: 1 Mrd. €<br>• Ausbildungsförderung KMU <a href="Parteipunkte_Detail.html#B35" class="glossary-ref">[B35]</a>: 0,5 Mrd. €<br>• Verwaltung durch Sozialpartner: 0,2 Mrd. €<br><br><strong>Warum "Einnahme"?</strong><br>• Ohne Fonds würde Staat diese 4 Mrd. € aus Haushalt zahlen müssen<br>• Durch Umlage: 0 € Haushaltsbelastung<br>• → Relative "Einsparung" von 4 Mrd. €<br><br><strong>Vorbild:</strong> Bau-Sozialkassen, Kurzarbeitergeld-Umlage (bewährte Modelle)' },
+            { name: 'Realistischer Puffer/Reserve', amount: 6, detail: '<strong>Ehrliche Rechnung:</strong><br><br>Die obigen 4 Posten ergeben nur 39 Mrd. € "echtes" Geld:<br>• Investitionsregel <a href="Parteipunkte_Detail.html#B11" class="glossary-ref">[B11]</a>: 25 Mrd. € (echt)<br>• Bürokratieabbau: 8 Mrd. € (teilweise spekulativ)<br>• Verwaltung: 2 Mrd. € (ab Jahr 2, konservativ)<br>• IPCEI <a href="Parteipunkte_Detail.html#B17" class="glossary-ref">[B17]</a>-Matching: 8 Mrd. € (Hebelwirkung, nicht Haushalt)<br>• Umlagen: 4 Mrd. € (neutral)<br><br><strong>Fehlbetrag zu 47 Mrd. € Ausgaben:</strong> 8 Mrd. €<br><br><strong>Deckung durch:</strong><br>• Priorisierung: Nicht alle Maßnahmen sofort Jahr 1<br>&nbsp;&nbsp;- Jahr 1: 35 Mrd. €<br>&nbsp;&nbsp;- Jahr 2: 42 Mrd. € (wenn Effizienzgewinne greifen)<br>&nbsp;&nbsp;- Jahr 3: 47 Mrd. € (Vollausbau)<br>• Dynamische Effekte (kleine): 2-3 Mrd. € ab Jahr 2<br>• Kommunale Kofinanzierung (ÖPNV): 1 Mrd. €<br>• EU-Kofinanzierung (Infrastruktur): 1 Mrd. €<br>• Notfalls: Priorisierung verschieben<br><br><strong>Transparenz:</strong> Wir rechnen nicht schön! Phase 1 ist ambitioniert aber machbar.' }
+        ];
+        const phase2Ausgaben = [
+            { name: 'Infrastruktur Ausbau', cost: 10, detail: 'Deutschlandtakt <a href="Parteipunkte_Detail.html#B20" class="glossary-ref">[B20]</a>, ÖPNV-Taktverdichtung. Nur bei Erfolg Phase 1.' },
+            { name: 'Weiterbildung Expansion', cost: 4, detail: 'Von 25.000 auf 50.000 Plätze. Wenn Phase 1 Beschäftigungsquote +0,3pp erreicht.' },
+            { name: 'Industriestrategie Vollausbau', cost: 15, detail: 'Batterien, MedTech. Nur wenn IPCEI Phase 1 läuft.' },
+            { name: 'Rente (Deutschland-Rente Start)', cost: 10, detail: 'Kapitalgedeckte Säule 2%+1%. Langfristprojekt, Start erst bei stabiler Haushaltslage.' },
+            { name: 'Steuerpolitik Vollausbau', cost: 9, detail: 'Kalte Progression <a href="Parteipunkte_Detail.html#B13" class="glossary-ref">[B13]</a>, Investitionsfreibetrag. Nur bei +2% Wachstum.' },
+            { name: 'Weitere Maßnahmen', cost: 26, detail: 'Geopolitik, Wirtschaftsstandort, Kriminalität, erweiterte Berufsausbildung. Schrittweise je nach Haushaltslage.' }
+        ];
+        const phase2Einnahmen = [
+            { name: 'Investitionsregel Vollausbau', amount: 15, detail: 'Von 0,6% auf 1% BIP <a href="Parteipunkte_Detail.html#B37" class="glossary-ref">[B37]</a>. Nur bei stabiler Verschuldungsquote.' },
+            { name: 'Dynamische Effekte (Wachstum)', amount: 12, detail: 'Bei +0,5% Wachstum aus Phase 1: +12 Mrd. € Steuereinnahmen. Quartalsweise validiert.' },
+            { name: 'Bürokratieabbau Phase 2', amount: 7, detail: 'Weitere 15% Abbau = zusätzlich 7 Mrd. € Einsparung.' },
+            { name: 'Höhere Beschäftigung', amount: 8, detail: 'Bei Verweildauer Bürgergeld <a href="Parteipunkte_Detail.html#B4" class="glossary-ref">[B4]</a> -0,5 Jahre: 8 Mrd. € Einsparung Sozialausgaben.' },
+            { name: 'Produktivitätssteigerung', amount: 6, detail: 'Weiterbildung → +1% Produktivität = 6 Mrd. € höheres BIP = Steuern.' },
+            { name: 'Private Matching-Funds Expansion', amount: 9, detail: 'F&E-Matching greift: Private verdoppeln Staat = 9 Mrd. € effektive Entlastung.' },
+            { name: 'Kommunale Kofinanzierung', amount: 4, detail: 'Länder/Kommunen steigen bei Infrastruktur ein. 50:50 Teilung.' },
+            { name: 'Weitere Effizienzgewinne', amount: 13, detail: 'Resozialisierung <a href="Parteipunkte_Detail.html#B32" class="glossary-ref">[B32]</a> (-Rückfall), digitale Verwaltung, optimierte Prozesse. Kumulative Effekte.' }
+        ];
+        function renderTable(container, data, type) {
+            let html = '<div class="cost-row header"><div>Maßnahme</div><div style="text-align: right;">Betrag/Jahr</div></div>';
+            let total = 0;
+            data.forEach((item, index) => {
+                const amount = item.cost || item.amount;
+                total += amount;
+                html += `<div class="cost-row" onclick="toggleDetail(this)"><div class="cost-category"><span>${item.name} <span class="expand-icon">▸</span></span></div><div class="cost-amount ${type}">${amount} Mrd. €</div></div><div class="detail-content"><h4>${item.name}</h4><p>${item.detail}</p></div>`;
+            });
+            html += `<div class="cost-row total"><div>Gesamt</div><div class="cost-amount ${type}">${total} Mrd. €</div></div>`;
+            document.getElementById(container).innerHTML = html;
+        }
+        function toggleDetail(row) {
+            if (row.classList.contains('header') || row.classList.contains('total')) return;
+            const isExpanded = row.classList.contains('expanded');
+            document.querySelectorAll('.cost-row.expanded').forEach(r => r.classList.remove('expanded'));
+            document.querySelectorAll('.detail-content.show').forEach(d => d.classList.remove('show'));
+            if (!isExpanded) {
+                row.classList.add('expanded');
+                const detail = row.nextElementSibling;
+                if (detail && detail.classList.contains('detail-content')) detail.classList.add('show');
+            }
+        }
+        function switchPhase(phase) {
+            document.querySelectorAll('.phase-tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.phase-content').forEach(content => content.classList.remove('active'));
+            document.querySelectorAll('.phase-tab')[phase - 1].classList.add('active');
+            document.getElementById('phase-' + phase).classList.add('active');
+        }
+        document.addEventListener('DOMContentLoaded', function() {
+            renderTable('ausgaben-phase1', phase1Ausgaben, 'ausgaben');
+            renderTable('einnahmen-phase1', phase1Einnahmen, 'einnahmen');
+            renderTable('ausgaben-phase2', phase2Ausgaben, 'ausgaben');
+            renderTable('einnahmen-phase2', phase2Einnahmen, 'einnahmen');
+        });
+    </script>
+</body>
+</html>

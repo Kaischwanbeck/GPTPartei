@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finanzierung - GPT Partei</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-blue: #001f54;
+            --secondary-blue: #034078;
+            --accent-cyan: #00d4ff;
+            --accent-yellow: #ffd700;
+            --accent-green: #2e7d32;
+            --accent-red: #c62828;
+            --text-dark: #1a1a1a;
+            --text-light: #666;
+            --bg-light: #f8f9fa;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background: var(--bg-light);
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: white;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+        }
+
+        .logo-nav {
+            height: 50px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .logo-nav:hover {
+            transform: scale(1.05);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--primary-blue);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-cyan);
+        }
+
+        .back-btn {
+            background: var(--accent-cyan);
+            color: white;
+            padding: 0.6rem 1.5rem;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: var(--primary-blue);
+            transform: translateY(-2px);
+        }
+
+        /* Hero */
+        .hero {
+            margin-top: 70px;
+            padding: 4rem 2rem 3rem;
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
+            color: white;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        /* Summary Cards */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .summary-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            text-align: center;
+            border-top: 4px solid var(--accent-cyan);
+        }
+
+        .summary-card.ausgaben {
+            border-top-color: var(--accent-red);
+        }
+
+        .summary-card.einnahmen {
+            border-top-color: var(--accent-green);
+        }
+
+        .summary-card.neutral {
+            border-top-color: var(--accent-yellow);
+        }
+
+        .summary-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary-blue);
+            margin-bottom: 0.5rem;
+        }
+
+        .summary-card.ausgaben .summary-number {
+            color: var(--accent-red);
+        }
+
+        .summary-card.einnahmen .summary-number {
+            color: var(--accent-green);
+        }
+
+        .summary-label {
+            font-size: 1rem;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        /* Section */
+        .section {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            margin-bottom: 2rem;
+        }
+
+        .section h2 {
+            color: var(--primary-blue);
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 3px solid var(--accent-cyan);
+        }
+
+        /* Cost Table */
+        .cost-table {
+            width: 100%;
+            margin: 1rem 0;
+        }
+
+        .cost-row {
+            display: grid;
+            grid-template-columns: 3fr 2fr 1.5fr;
+            padding: 1rem;
+            border-bottom: 1px solid var(--bg-light);
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .cost-row:hover {
+            background: var(--bg-light);
+        }
+
+        .cost-row.header {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
+            color: white;
+            font-weight: bold;
+            border-radius: 10px;
+            margin-bottom: 0.5rem;
+        }
+
+        .cost-row.total {
+            background: var(--bg-light);
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: var(--primary-blue);
+            border-top: 3px solid var(--primary-blue);
+            border-bottom: none;
+            margin-top: 0.5rem;
+        }
+
+        .cost-category {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .category-badge {
+            background: var(--accent-cyan);
+            color: white;
+            padding: 0.3rem 0.6rem;
+            border-radius: 5px;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
+        .cost-amount {
+            text-align: right;
+            font-weight: 600;
+        }
+
+        .cost-amount.ausgaben {
+            color: var(--accent-red);
+        }
+
+        .cost-amount.einnahmen {
+            color: var(--accent-green);
+        }
+
+        .cost-amount.neutral {
+            color: var(--text-light);
+        }
+
+        .cost-type {
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        /* Balance Box */
+        .balance-box {
+            background: linear-gradient(135deg, var(--accent-green) 0%, #1b5e20 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .balance-box.deficit {
+            background: linear-gradient(135deg, var(--accent-red) 0%, #8b0000 100%);
+        }
+
+        .balance-amount {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .balance-label {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        /* Info Box */
+        .info-box {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            padding: 1.5rem;
+            border-radius: 10px;
+            border-left: 5px solid var(--accent-cyan);
+            margin: 1.5rem 0;
+        }
+
+        .info-box strong {
+            color: var(--primary-blue);
+        }
+
+        /* Assumptions */
+        .assumptions {
+            background: var(--bg-light);
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin: 1.5rem 0;
+        }
+
+        .assumptions h3 {
+            color: var(--primary-blue);
+            margin-bottom: 1rem;
+        }
+
+        .assumptions ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .assumptions li {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .assumptions li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: var(--accent-cyan);
+            font-weight: bold;
+        }
+
+        /* Expandable Details */
+        .cost-row.clickable {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .cost-row.clickable:hover {
+            background: linear-gradient(90deg, var(--bg-light) 0%, white 100%);
+            transform: translateX(5px);
+        }
+
+        .expand-icon {
+            display: inline-block;
+            margin-left: 0.5rem;
+            transition: transform 0.3s ease;
+            color: var(--accent-cyan);
+            font-weight: bold;
+        }
+
+        .cost-row.expanded .expand-icon {
+            transform: rotate(90deg);
+        }
+
+        .detail-content {
+            display: none;
+            grid-column: 1 / -1;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, #f0f7ff 0%, #e3f2fd 100%);
+            border-radius: 10px;
+            margin-top: 0.5rem;
+            border-left: 4px solid var(--accent-cyan);
+            animation: slideDown 0.3s ease;
+        }
+
+        .detail-content.show {
+            display: block;
+        }
+
+        .detail-content h4 {
+            color: var(--primary-blue);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .detail-content ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .detail-content li {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+            line-height: 1.8;
+        }
+
+        .detail-content li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: var(--accent-cyan);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .detail-breakdown {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+
+        .detail-breakdown-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--bg-light);
+        }
+
+        .detail-breakdown-item:last-child {
+            border-bottom: none;
+            font-weight: bold;
+            color: var(--primary-blue);
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .cost-row {
+                grid-template-columns: 2fr 1fr;
+                font-size: 0.9rem;
+            }
+
+            .cost-type {
+                display: none;
+            }
+
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .balance-amount {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <img src="GptLogo.jpg" alt="GPT Partei Logo" class="logo-nav" onclick="window.location.href='Parteipunkte_Detail.html'">
+            <ul class="nav-links">
+                <li><a href="Parteipunkte_Detail.html" class="back-btn">← Zurück zum Programm</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <h1>Finanzierungskonzept</h1>
+        <p>Transparente Darstellung aller Kosten und Gegenfinanzierung</p>
+    </section>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Summary -->
+        <div class="summary-grid">
+            <div class="summary-card ausgaben">
+                <div class="summary-number">~68 Mrd. €</div>
+                <div class="summary-label">Neue Ausgaben pro Jahr</div>
+            </div>
+            <div class="summary-card einnahmen">
+                <div class="summary-number">~66 Mrd. €</div>
+                <div class="summary-label">Gegenfinanzierung pro Jahr</div>
+            </div>
+            <div class="summary-card neutral">
+                <div class="summary-number">~40 Mrd. €</div>
+                <div class="summary-label">Zusätzlicher Investitionsspielraum</div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-number">-2 Mrd. €</div>
+                <div class="summary-label">Nettobelastung Haushalt</div>
+            </div>
+        </div>
+
+        <!-- Ausgaben -->
+        <div class="section">
+            <h2>Ausgaben nach Politikfeldern</h2>
+            <div class="info-box">
+                <strong>Hinweis:</strong> Alle Beträge sind jährliche Durchschnittskosten über die Laufzeit der Maßnahmen (2026–2030). Einmalige Kosten wurden auf 5 Jahre umgelegt.
+            </div>
+
+            <div class="cost-table">
+                <div class="cost-row header">
+                    <div>Maßnahmenpaket</div>
+                    <div class="cost-type">Typ</div>
+                    <div style="text-align: right;">Kosten/Jahr</div>
+                </div>
+
+                <div class="cost-row">
+                    <div class="cost-category">
+                        <span class="category-badge">01</span>
+                        <span>Mindestlohn (Weiterbildung, Automatisierung)</span>
+                    </div>
+                    <div class="cost-type">Investiv</div>
+                    <div class="cost-amount ausgaben">~10 Mrd. €</div>
+                </div>
+
+                <div class="cost-row">
+                    <div class="cost-category">
+                        <span class="category-badge">02</span>
+                        <span>Bürgergeld-Reform (Anreize, Qualifizierung)</span>
+                    </div>
+                    <div class="cost-type">Sozial</div>
+                    <div class="cost-amount ausgaben">~3 Mrd. €</div>
+                </div>
+
+                <div class="cost-row">
+                    <div class="cost-category">
+                        <span class="category-badge">03</span>
+                        <span>Fachkräftemangel (Skills, Anerkennung)</span>
+                    </div>
+                    <div class="cost-type">Investiv</div>
+                    <div class="cost-amount ausgaben">~6 Mrd. €</div>
+                </div>
+
+                <div class="cost-row">
+                    <div class="cost-category">
+                        <span class="category-badge">04</span>
+                        <span>Schulsystem (Digital, Curriculum, Labs)</span>
+                    </div>
+                    <div class="cost-type">Investiv</div>
+                    <div class="cost-amount ausgaben">~3,5 Mrd. €</div>
+                </div>
+
+                <div class="cost-row">
+                    <div class="cost-category">
+                        <span class="category-badge">05</span>
+                        <span>Gewerkschaften (Weiterbildungsfonds)</span>
+                    </div>
+                    <div class="cost-type">Neutral</div>
+                    <div class="cost-amount neutral">~1,5 Mrd. €</div>
+                </div>
+
+                <div class="cost-row">
+                    <div class="cost-category">
+                        <span class="category-badge">06</span>
+                        <span>Steuerpolitik (MwSt., Kalte Progression)</span>
+                    </div>
+                    <div class="cost-type">Sozial</div>
+                    <div class="cost-amount ausgaben">~14 Mrd. €</div>
+                </div>
+
+                <div class="cost-row">
+                    <div class="cost-category">
+                        <span class="category-badge">07</span>
+                        <span>Digitalisierung (Glasfaser, Cloud, 5G)</span>
+                    </div>
+                    <div class="cost-type">Investiv</div>
+                    <div class="cost-amount ausgaben">~6 Mrd. €</div>
+                </div>
+
+                <div class="cost-row">
+                    <div class="cost-category">
+                        <span class="category-badge">08</span>
+                        <span>Industriesektor (IPCEI, F&E, Batterien)</span>
+                    </div>
+                    <div class="cost-type">Investiv</div>
+                    <div class="cost-amount ausgaben">~25 Mrd. €</div>
+                </div>
+
+                <div class="cost-row">
+                    <div class="cost-category">
+                        <span class="category-badge">09</span>
+                        <span>Infrastruktur (Schiene, ÖPNV, Erhalt)</span>
+                    </div>
+                    <div class="cost-type">Investiv</div>
+                    <div class="cost-amount ausgaben">~16 Mrd. €</div>
+                </div>
+
+                <div class="cost-row">
+                    <div class="cost-category">
+                        <span class="category-badge">10</span>
+                        <span>Geopolitik (Rohstoffe, Reserven)</span>
+                    </div>
+                    <div class="cost-type">Investiv</div>
+                    <div class="cost-amount ausgaben">~2 Mrd. €</div>
+                </div>
+
+                <div class="cost-row">
+                    <div class="cost-category">
+                        <span class="category-badge">11</span>
+                        <span>Wirtschaftsstandort (Genehmigungen, Energie)</span>
+                    </div>
+                    <div class="cost-type">Investiv</div>
+                    <div class="cost-amount ausgaben">~5 Mrd. €</div>
+                </div>
+
+                <div class="cost-row">
+                    <div class="cost-category">
+                        <span class="category-badge">12</span>
+                        <span>Rente (Deutschland-Rente, Flexibilisierung)</span>
+                    </div>
+                    <div class="cost-type">Sozial</div>
+                    <div class="cost-amount ausgaben">~21 Mrd. €</div>
+                </div>
+
+                <div class="cost-row">
+                    <div class="cost-category">
+                        <span class="category-badge">13</span>
+                        <span>Kriminalität (Prävention, Resozialisierung)</span>
+                    </div>
+                    <div class="cost-type">Sozial</div>
+                    <div class="cost-amount ausgaben">~4 Mrd. €</div>
+                </div>
+
+                <div class="cost-row">
+                    <div class="cost-category">
+                        <span class="category-badge">14</span>
+                        <span>Berufsausbildung (Garantie, Modernisierung)</span>
+                    </div>
+                    <div class="cost-type">Investiv</div>
+                    <div class="cost-amount ausgaben">~4 Mrd. €</div>
+                </div>
+
+                <div class="cost-row total">
+                    <div>Gesamtausgaben (ohne neutrale Positionen)</div>
+                    <div class="cost-type"></div>
+                    <div class="cost-amount ausgaben">~120 Mrd. €</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gegenfinanzierung -->
+        <div class="section">
+            <h2>Gegenfinanzierung & Spielräume</h2>
+
+            <div class="cost-table">
+                <div class="cost-row header">
+                    <div>Finanzierungsquelle</div>
+                    <div class="cost-type">Typ</div>
+                    <div style="text-align: right;">Volumen/Jahr</div>
+                </div>
+
+                <div class="cost-row">
+                    <div class="cost-category">
+                        <span class="category-badge">✓</span>
+                        <span>Reform Schuldenbremse (Investitionsregel)</span>
+                    </div>
+                    <div class="cost-type">Spielraum</div>
+                    <div class="cost-amount einnahmen">+40 Mrd. €</div>
+                </div>
+
+                <div class="cost-row">
+                    <div class="cost-category">
+                        <span class="category-badge">✓</span>
+                        <span>Bürokratieabbau (Sunset-Clauses)</span>
+                    </div>
+                    <div class="cost-type">Einsparung</div>
+                    <div class="cost-amount einnahmen">+12 Mrd. €</div>
+                </div>
+
+                <div class="cost-row">
+                    <div class="cost-category">
+                        <span class="category-badge">✓</span>
+                        <span>Unternehmenssteuern Reform</span>
+                    </div>
+                    <div class="cost-type">Einnahme</div>
+                    <div class="cost-amount ausgaben">-6 Mrd. €</div>
+                </div>
+
+                <div class="cost-row">
+                    <div class="cost-category">
+                        <span class="category-badge">✓</span>
+                        <span>Weiterbildungsfonds (Arbeitgeberumlage)</span>
+                    </div>
+                    <div class="cost-type">Neutral</div>
+                    <div class="cost-amount einnahmen">+3,5 Mrd. €</div>
+                </div>
+
+                <div class="cost-row">
+                    <div class="cost-category">
+                        <span class="category-badge">✓</span>
+                        <span>Ausbildungsfonds (KMU-Umlage)</span>
+                    </div>
+                    <div class="cost-type">Neutral</div>
+                    <div class="cost-amount einnahmen">+1,5 Mrd. €</div>
+                </div>
+
+                <div class="cost-row">
+                    <div class="cost-category">
+                        <span class="category-badge">✓</span>
+                        <span>Dynamische Effekte (Wachstum, Beschäftigung)</span>
+                    </div>
+                    <div class="cost-type">Einnahme</div>
+                    <div class="cost-amount einnahmen">+8 Mrd. €</div>
+                </div>
+
+                <div class="cost-row">
+                    <div class="cost-category">
+                        <span class="category-badge">✓</span>
+                        <span>Effizienzgewinne (Digitalisierung, Verwaltung)</span>
+                    </div>
+                    <div class="cost-type">Einsparung</div>
+                    <div class="cost-amount einnahmen">+3 Mrd. €</div>
+                </div>
+
+                <div class="cost-row">
+                    <div class="cost-category">
+                        <span class="category-badge">✓</span>
+                        <span>Reduktion Rückfallkosten (Resozialisierung)</span>
+                    </div>
+                    <div class="cost-type">Einsparung</div>
+                    <div class="cost-amount einnahmen">+1 Mrd. €</div>
+                </div>
+
+                <div class="cost-row">
+                    <div class="cost-category">
+                        <span class="category-badge">✓</span>
+                        <span>Matching-Funds (Private F&E-Kofinanzierung)</span>
+                    </div>
+                    <div class="cost-type">Kofinanz.</div>
+                    <div class="cost-amount einnahmen">+15 Mrd. €</div>
+                </div>
+
+                <div class="cost-row total">
+                    <div>Netto-Gegenfinanzierung</div>
+                    <div class="cost-type"></div>
+                    <div class="cost-amount einnahmen">+78 Mrd. €</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Balance -->
+        <div class="balance-box">
+            <div class="balance-amount">Ausgeglichen</div>
+            <div class="balance-label">Haushaltsbalance mit Investitionsspielraum von ~18 Mrd. €/Jahr</div>
+        </div>
+
+        <!-- Annahmen -->
+        <div class="section">
+            <div class="assumptions">
+                <h3>Wichtige Annahmen & Klarstellungen</h3>
+                <ul>
+                    <li><strong>Investitionsregel:</strong> Erfordert Grundgesetzänderung (2/3-Mehrheit). Investive Ausgaben (Bildung, Digitalisierung, Infrastruktur, Klima) können zusätzlich 1% BIP = ~40 Mrd. €/Jahr finanziert werden.</li>
+                    <li><strong>Dynamische Effekte:</strong> Konservative Schätzung +8 Mrd. €/Jahr durch höhere Beschäftigung (+0,3 pp), Produktivität (+0,5 pp), weniger Langzeitarbeitslosigkeit.</li>
+                    <li><strong>Matching-Funds:</strong> Staat verdoppelt private F&E-Ausgaben → 15 Mrd. € staatlich hebeln 15 Mrd. € privat = 30 Mrd. € Gesamtinvestitionen.</li>
+                    <li><strong>Umlagen (neutral):</strong> Weiterbildungs- und Ausbildungsfonds durch Arbeitgeber finanziert, nicht aus Bundeshaushalt.</li>
+                    <li><strong>Zeitraum:</strong> Durchschnittliche Jahreskosten 2026–2030. Einmalige Ausgaben (z.B. Glasfaser-Aufbau) auf 5 Jahre verteilt.</li>
+                    <li><strong>Priorisierung:</strong> Falls politische Umsetzung verzögert: Investive Maßnahmen (Bildung, Digitalisierung, Infrastruktur) haben Vorrang vor sozialen Transfers.</li>
+                    <li><strong>Risikopuffer:</strong> ~18 Mrd. € Überschuss dient als Reserve für Kostenüberschreitungen oder langsamere Effizienzgewinne.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Phasenplan -->
+        <div class="section">
+            <h2>Phasenplan der Umsetzung</h2>
+            <div class="cost-table">
+                <div class="cost-row header">
+                    <div>Phase</div>
+                    <div class="cost-type">Zeitraum</div>
+                    <div style="text-align: right;">Volumen</div>
+                </div>
+
+                <div class="cost-row">
+                    <div class="cost-category">
+                        <span class="category-badge">1</span>
+                        <span>Quick Wins (Digitalisierung, Bürokratieabbau)</span>
+                    </div>
+                    <div class="cost-type">2026</div>
+                    <div class="cost-amount">~15 Mrd. €</div>
+                </div>
+
+                <div class="cost-row">
+                    <div class="cost-category">
+                        <span class="category-badge">2</span>
+                        <span>Infrastruktur & Bildung (Schiene, Schulen)</span>
+                    </div>
+                    <div class="cost-type">2026–2028</div>
+                    <div class="cost-amount">~35 Mrd. €/J</div>
+                </div>
+
+                <div class="cost-row">
+                    <div class="cost-category">
+                        <span class="category-badge">3</span>
+                        <span>Industrie & Innovation (IPCEI, Batterien)</span>
+                    </div>
+                    <div class="cost-type">2027–2030</div>
+                    <div class="cost-amount">~40 Mrd. €/J</div>
+                </div>
+
+                <div class="cost-row">
+                    <div class="cost-category">
+                        <span class="category-badge">4</span>
+                        <span>Soziale Reformen (Rente, Bürgergeld)</span>
+                    </div>
+                    <div class="cost-type">2027–2035</div>
+                    <div class="cost-amount">~30 Mrd. €/J</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Info Box Final -->
+        <div class="info-box">
+            <strong>Transparenz-Versprechen:</strong> Jährliche Veröffentlichung eines Fortschrittsberichts mit IST-Ausgaben, erreichten KPIs und Abweichungsanalyse. Unabhängige Evaluation durch Bundesrechnungshof nach 3 Jahren.
+        </div>
+    </div>
+</body>
+</html>

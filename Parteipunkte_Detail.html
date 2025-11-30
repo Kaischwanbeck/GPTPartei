@@ -1,0 +1,1389 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parteipunkte im Detail - GPT Partei</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-blue: #001f54;
+            --secondary-blue: #034078;
+            --accent-cyan: #00d4ff;
+            --accent-yellow: #ffd700;
+            --text-dark: #1a1a1a;
+            --text-light: #666;
+            --bg-light: #f8f9fa;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background: var(--bg-light);
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: white;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+        }
+
+        .logo-nav {
+            height: 50px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .logo-nav:hover {
+            transform: scale(1.05);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--primary-blue);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-cyan);
+        }
+
+        .back-btn {
+            background: var(--accent-cyan);
+            color: white;
+            padding: 0.6rem 1.5rem;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: var(--primary-blue);
+            transform: translateY(-2px);
+        }
+
+        /* Hero */
+        .hero {
+            margin-top: 70px;
+            padding: 4rem 2rem 3rem;
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
+            color: white;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        /* Navigation Grid */
+        .punkt-nav {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .punkt-nav-item {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .punkt-nav-item:hover {
+            border-color: var(--accent-cyan);
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0, 212, 255, 0.2);
+        }
+
+        .punkt-nav-item.active {
+            border-color: var(--accent-cyan);
+            background: linear-gradient(135deg, var(--accent-cyan) 0%, #0099cc 100%);
+            color: white;
+        }
+
+        .punkt-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--accent-cyan);
+            margin-bottom: 0.5rem;
+        }
+
+        .punkt-nav-item.active .punkt-number {
+            color: white;
+        }
+
+        .punkt-title {
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        /* Detail Card */
+        .detail-card {
+            background: white;
+            border-radius: 15px;
+            padding: 3rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            display: none;
+        }
+
+        .detail-card.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .detail-card h2 {
+            color: var(--primary-blue);
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 3px solid var(--accent-cyan);
+        }
+
+        .section-header {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
+            color: white;
+            padding: 1.5rem 2rem;
+            border-radius: 10px;
+            margin: 2rem 0 1rem;
+        }
+
+        .section-header h3 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .section-content {
+            padding: 1.5rem;
+            background: var(--bg-light);
+            border-radius: 10px;
+            margin-bottom: 2rem;
+        }
+
+        .section-content ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .section-content li {
+            padding: 0.8rem 0;
+            padding-left: 2rem;
+            position: relative;
+            line-height: 1.8;
+        }
+
+        .section-content li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: var(--accent-cyan);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .kpi-box {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+            padding: 1.5rem;
+            border-radius: 10px;
+            border-left: 5px solid var(--accent-yellow);
+            margin: 1rem 0;
+        }
+
+        .kpi-box strong {
+            color: var(--primary-blue);
+            font-size: 1.1rem;
+        }
+
+        .massnahmen-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 1rem 0;
+        }
+
+        .massnahme-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            border-left: 4px solid var(--accent-cyan);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .massnahme-card h4 {
+            color: var(--primary-blue);
+            margin-bottom: 0.5rem;
+        }
+
+        .argument-box {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+            border: 2px solid var(--accent-cyan);
+        }
+
+        .argument-box h4 {
+            color: var(--primary-blue);
+            margin-bottom: 1rem;
+        }
+
+        .pro {
+            color: #2e7d32;
+            font-weight: bold;
+        }
+
+        .contra {
+            color: #c62828;
+            font-weight: bold;
+        }
+
+        .rebuttal {
+            color: var(--primary-blue);
+            font-weight: bold;
+        }
+
+        /* Quellen & Fakten-Styling */
+        .fact-ref {
+            display: inline-block;
+            margin-left: 0.3rem;
+            padding: 0.1rem 0.4rem;
+            background: var(--accent-cyan);
+            color: white;
+            font-size: 0.75rem;
+            font-weight: bold;
+            border-radius: 3px;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            vertical-align: super;
+            line-height: 1;
+        }
+
+        .fact-ref:hover {
+            background: var(--primary-blue);
+            transform: translateY(-1px);
+        }
+
+        .fact-meta {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            font-style: italic;
+            margin-left: 0.5rem;
+        }
+
+        .source-list {
+            background: linear-gradient(135deg, #f0f7ff 0%, #e3f2fd 100%);
+            padding: 2rem;
+            border-radius: 15px;
+            border-left: 5px solid var(--accent-cyan);
+            margin-top: 3rem;
+        }
+
+        .source-list h2 {
+            color: var(--primary-blue);
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 3px solid var(--accent-cyan);
+        }
+
+        .source-list ol {
+            list-style: none;
+            counter-reset: source-counter;
+            padding-left: 0;
+        }
+
+        .source-list li {
+            counter-increment: source-counter;
+            padding: 0.8rem 0;
+            padding-left: 4rem;
+            position: relative;
+            line-height: 1.8;
+            border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+        }
+
+        .source-list li:last-child {
+            border-bottom: none;
+        }
+
+        .source-list li::before {
+            content: "[Q" counter(source-counter) "]";
+            position: absolute;
+            left: 0;
+            color: white;
+            background: var(--accent-cyan);
+            padding: 0.2rem 0.5rem;
+            border-radius: 3px;
+            font-weight: bold;
+            font-size: 0.85rem;
+        }
+
+        .source-list a {
+            color: var(--accent-cyan);
+            word-break: break-all;
+        }
+
+        .source-note {
+            background: #fff3e0;
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--accent-yellow);
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+
+        /* Begriffserklärungsverzeichnis-Styling */
+        .glossary-list {
+            background: linear-gradient(135deg, #f1f8f4 0%, #e8f5e9 100%);
+            padding: 2rem;
+            border-radius: 15px;
+            border-left: 5px solid #4caf50;
+            margin-top: 3rem;
+        }
+
+        .glossary-list h2 {
+            color: #2e7d32;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 3px solid #4caf50;
+        }
+
+        .glossary-list ol {
+            list-style: none;
+            counter-reset: glossary-counter;
+            padding-left: 0;
+        }
+
+        .glossary-list li {
+            counter-increment: glossary-counter;
+            padding: 0.8rem 0;
+            padding-left: 4rem;
+            position: relative;
+            line-height: 1.8;
+            border-bottom: 1px solid rgba(76, 175, 80, 0.2);
+        }
+
+        .glossary-list li:last-child {
+            border-bottom: none;
+        }
+
+        .glossary-list li::before {
+            content: "[B" counter(glossary-counter) "]";
+            position: absolute;
+            left: 0;
+            color: white;
+            background: #4caf50;
+            padding: 0.2rem 0.5rem;
+            border-radius: 3px;
+            font-weight: bold;
+            font-size: 0.85rem;
+        }
+
+        .glossary-ref {
+            display: inline-block;
+            margin-left: 0.3rem;
+            padding: 0.1rem 0.4rem;
+            background: #4caf50;
+            color: white;
+            font-size: 0.75rem;
+            font-weight: bold;
+            border-radius: 3px;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            vertical-align: super;
+            line-height: 1;
+        }
+
+        .glossary-ref:hover {
+            background: #2e7d32;
+            transform: translateY(-1px);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .punkt-nav {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            }
+
+            .detail-card {
+                padding: 1.5rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <img src="GptLogo.jpg" alt="GPT Partei Logo" class="logo-nav">
+            <ul class="nav-links">
+                <li><a href="Finanzierung.html">Finanzierung</a></li>
+                <li><a href="Parteimitglieder.html">Unser Team</a></li>
+                <li><a href="#" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;">Nach oben</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <h1>GPT Partei - Unser Programm</h1>
+        <p>Gemeinschaft · Progress · Tatkraft</p>
+        <p style="margin-top: 1rem; font-size: 1rem; opacity: 0.85;">14 Politikfelder mit konkreten Maßnahmen und messbaren Zielen</p>
+    </section>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Navigation -->
+        <div class="punkt-nav">
+            <div class="punkt-nav-item active" onclick="showPunkt(1)">
+                <div class="punkt-number">01</div>
+                <div class="punkt-title">Mindestlohn</div>
+            </div>
+            <div class="punkt-nav-item" onclick="showPunkt(2)">
+                <div class="punkt-number">02</div>
+                <div class="punkt-title">Bürgergeld</div>
+            </div>
+            <div class="punkt-nav-item" onclick="showPunkt(3)">
+                <div class="punkt-number">03</div>
+                <div class="punkt-title">Fachkräftemangel</div>
+            </div>
+            <div class="punkt-nav-item" onclick="showPunkt(4)">
+                <div class="punkt-number">04</div>
+                <div class="punkt-title">Schulsystem</div>
+            </div>
+            <div class="punkt-nav-item" onclick="showPunkt(5)">
+                <div class="punkt-number">05</div>
+                <div class="punkt-title">Gewerkschaften</div>
+            </div>
+            <div class="punkt-nav-item" onclick="showPunkt(6)">
+                <div class="punkt-number">06</div>
+                <div class="punkt-title">Steuerpolitik</div>
+            </div>
+            <div class="punkt-nav-item" onclick="showPunkt(7)">
+                <div class="punkt-number">07</div>
+                <div class="punkt-title">Digitalisierung</div>
+            </div>
+            <div class="punkt-nav-item" onclick="showPunkt(8)">
+                <div class="punkt-number">08</div>
+                <div class="punkt-title">Industriesektor</div>
+            </div>
+            <div class="punkt-nav-item" onclick="showPunkt(9)">
+                <div class="punkt-number">09</div>
+                <div class="punkt-title">Infrastruktur</div>
+            </div>
+            <div class="punkt-nav-item" onclick="showPunkt(10)">
+                <div class="punkt-number">10</div>
+                <div class="punkt-title">Geopolitik</div>
+            </div>
+            <div class="punkt-nav-item" onclick="showPunkt(11)">
+                <div class="punkt-number">11</div>
+                <div class="punkt-title">Wirtschaftsstandort</div>
+            </div>
+            <div class="punkt-nav-item" onclick="showPunkt(12)">
+                <div class="punkt-number">12</div>
+                <div class="punkt-title">Rente</div>
+            </div>
+            <div class="punkt-nav-item" onclick="showPunkt(13)">
+                <div class="punkt-number">13</div>
+                <div class="punkt-title">Kriminalität</div>
+            </div>
+            <div class="punkt-nav-item" onclick="showPunkt(14)">
+                <div class="punkt-number">14</div>
+                <div class="punkt-title">Berufsausbildung</div>
+            </div>
+        </div>
+
+        <!-- Detail Cards -->
+        
+        <!-- Punkt 1: Mindestlohn -->
+        <div id="punkt-1" class="detail-card active">
+            <h2>01 — Mindestlohn</h2>
+            
+            <div class="section-header">
+                <h3>Jetzige Lage & Analyse</h3>
+            </div>
+            <div class="section-content">
+                <ul>
+                    <li><strong>Gesetzlicher Mindestlohn 2025:</strong> 12,82 €/Stunde <span class="fact-meta">(Deutschland, ab 01.01.2025)</span> <a href="#Q1" class="fact-ref">[Q1]</a></li>
+                    <li><strong>Anzahl Mindestlohnbeschäftigte:</strong> ca. 6,5 Mio. <span class="fact-meta">(Schätzung, 2024)</span></li>
+                    <li><strong>Reallohnentwicklung:</strong> <a href="#B2" class="glossary-ref">[B2]</a> 2022: -4,0%, 2023: +0,1%, 2024: +3,1% ggü. Vorjahr <a href="#Q2" class="fact-ref">[Q2]</a></li>
+                    <li><strong>Produktivität je Arbeitsstunde:</strong> <a href="#B3" class="glossary-ref">[B3]</a> +0,2% p.a. <span class="fact-meta">(Durchschnitt 2020–2024, Schätzung aus Destatis-Daten)</span></li>
+                    <li><strong>Tarifbindung:</strong> <a href="#B1" class="glossary-ref">[B1]</a> ca. 49% der Beschäftigten <span class="fact-meta">(West: ~52%, Ost: ~43%, Stand 2022/2023)</span> <a href="#Q3" class="fact-ref">[Q3]</a></li>
+                    <li><strong>Gewerkschaftlicher Organisationsgrad:</strong> ~16% der Beschäftigten <span class="fact-meta">(2022/2023)</span> <a href="#Q4" class="fact-ref">[Q4]</a></li>
+                </ul>
+            </div>
+
+            <div class="section-header">
+                <h3>Zielbild</h3>
+            </div>
+            <div class="section-content">
+                <p><strong>Mindestlohn auf aktuellem Niveau beibehalten; Realeinkommen durch Produktivitäts- und Qualifikationsoffensiven steigern.</strong> Fokus auf Tatkraft und Progress: Weiterbildung, Automatisierung und Tarifbindung als Hebel für nachhaltiges Einkommenswachstum.</p>
+            </div>
+
+            <div class="section-header">
+                <h3>Maßnahmen</h3>
+            </div>
+            <div class="massnahmen-grid">
+                <div class="massnahme-card">
+                    <h4>M1: Weiterbildungsgutscheine</h4>
+                    <p>1.500 € pro Erwerbstätige/r und Jahr für MINT- <a href="#B36" class="glossary-ref">[B36]</a>, Digital- und Handwerkskompetenzen</p>
+                    <p><strong>Ziel:</strong> 30% Teilnahmequote in 4 Jahren</p>
+                    <p><strong>Kosten:</strong> ~6–8 Mrd. €/Jahr</p>
+                </div>
+                <div class="massnahme-card">
+                    <h4>M2: KMU-Automatisierungsförderung</h4> <a href="#B35" class="glossary-ref">[B35]</a>
+                    <p>Zuschüsse bis 50% für Prozessdigitalisierung, Robotik, Software</p>
+                    <p><strong>Ziel:</strong> Produktivitätssteigerung 10–15%</p>
+                    <p><strong>Kosten:</strong> ~2–3 Mrd. €/Jahr</p>
+                </div>
+                <div class="massnahme-card">
+                    <h4>M3: Regionale Kompetenzzentren</h4>
+                    <p>50 Zentren bundesweit für Berufsorientierung und Umschulung</p>
+                    <p><strong>Module:</strong> Beratung + 3–6 Monate Kurzlehrgänge</p>
+                    <p><strong>Kosten:</strong> ~1–1,5 Mrd. €/Jahr</p>
+                </div>
+                <div class="massnahme-card">
+                    <h4>M4: Produktivitätsbeteiligung</h4>
+                    <p>Steuerliche Anreize: Freibetrag Gewinnbeteiligung bis 3.000 €/Jahr steuerfrei</p>
+                    <p><strong>Ziel:</strong> Mitarbeiterbindung und Leistungsanreiz</p>
+                    <p><strong>Kosten:</strong> ~0,5–1 Mrd. €/Jahr</p>
+                </div>
+            </div>
+
+            <div class="kpi-box">
+                <strong>KPIs:</strong><br>
+                • Produktivität je Arbeitsstunde: +0,2% p.a. (2024) → +2% p.a. (2029)<br>
+                • Tarifbindung: ~49% (2024) → +5 Prozentpunkte (2029)<br>
+                • Weiterbildungsquote: ~15% (2024) → 30% (2029)
+            </div>
+
+            <div class="section-header">
+                <h3>Argumentation</h3>
+            </div>
+            <div class="argument-box">
+                <h4>These 1: „Mindestlohn erhöhen = Inflation anheizen"</h4>
+                <p><span class="pro">Pro:</span> Produktivitätswachstum (+2% p.a.) ermöglicht reale Einkommenszuwächse ohne Kostendruck auf Unternehmen.</p>
+                <p><span class="contra">Gegenargument:</span> „Mindestlohnerhöhung hilft sofort gegen Armut; Produktivität braucht Jahre."</p>
+                <p><span class="rebuttal">Rebuttal:</span> Kurzfristige nominale Erhöhungen ohne Produktivitätsbasis werden durch Inflation neutralisiert. Unsere Maßnahmen wirken binnen 2–3 Jahren und schaffen dauerhafte Einkommensperspektiven.</p>
+            </div>
+        </div>
+
+        <!-- Punkt 4: Schulsystem -->
+        <div id="punkt-4" class="detail-card">
+            <h2>04 — Schulsystem</h2>
+            
+            <div class="section-header">
+                <h3>Jetzige Lage & Analyse</h3>
+            </div>
+            <div class="section-content">
+                <ul>
+                    <li><strong>PISA <a href="Parteipunkte_Detail.html#B7" class="glossary-ref">[B7]</a> 2022:</strong> Mathematik 475, Lesen 480, Naturwissenschaften 492 (Trend rückläufig seit 2015)</li>
+                    <li><strong>Risikoschüler <a href="Parteipunkte_Detail.html#B8" class="glossary-ref">[B8]</a>:</strong> Mathematik ~30%, Lesen ~25%</li>
+                    <li><strong>Digitale Ausstattung:</strong> 1:1-Endgeräte nur in ~20% der Schulen</li>
+                    <li><strong>Informatik-Unterricht:</strong> Verpflichtend ab Klasse 7 nur in ~10 Bundesländern</li>
+                    <li><strong>Lehrkräftemangel:</strong> ca. 40.000 unbesetzte Stellen</li>
+                </ul>
+            </div>
+
+            <div class="section-header">
+                <h3>Zielbild</h3>
+            </div>
+            <div class="section-content">
+                <p><strong>Modernes Curriculum (Digital-, Klima-, Wirtschafts- und KI-Kompetenzen); bundesweite Mindeststandards; leistungsfähige Schul-IT.</strong></p>
+            </div>
+
+            <div class="section-header">
+                <h3>Maßnahmen</h3>
+            </div>
+            <div class="massnahmen-grid">
+                <div class="massnahme-card">
+                    <h4>M1: Curriculum-Update</h4>
+                    <p>Informatik verpflichtend ab Klasse 5; neue Module: KI-Grundlagen, Klimawandel, Finanzkompetenz</p>
+                    <p><strong>Kosten:</strong> ~0,5–1 Mrd. €</p>
+                </div>
+                <div class="massnahme-card">
+                    <h4>M2: Bundesweite Mindeststandards</h4>
+                    <p>Verbindliche Kompetenztests Klasse 4, 8, 10; Lernstandsmonitoring mit individueller Förderung</p>
+                    <p><strong>Kosten:</strong> ~0,3–0,5 Mrd. €/Jahr</p>
+                </div>
+                <div class="massnahme-card">
+                    <h4>M3: DigitalPakt <a href="Parteipunkte_Detail.html#B9" class="glossary-ref">[B9]</a> 2.0</h4>
+                    <p>10 Mrd. € über 5 Jahre; Ziel 1:1-Endgeräte, 100% WLAN, Cloud-Lernplattformen</p>
+                    <p><strong>Kosten:</strong> ~2 Mrd. €/Jahr</p>
+                </div>
+                <div class="massnahme-card">
+                    <h4>M4: Maker-Labs</h4>
+                    <p>300 regionale Zentren: 3D-Druck, Robotik, Coding, Nachhaltigkeit</p>
+                    <p><strong>Kosten:</strong> ~0,8–1,2 Mrd. €/Jahr</p>
+                </div>
+            </div>
+
+            <div class="kpi-box">
+                <strong>KPIs:</strong><br>
+                • PISA-Score Mathematik: 475 (2022) → 500 (2030)<br>
+                • 1:1-Endgeräte: ~20% (2024) → 100% (2029)<br>
+                • IT-Ausfallzeiten: 15–20 Tage/Jahr (2024) → ≤5 Tage/Jahr (2029)
+            </div>
+            
+            <div class="section-header">
+                <h3>Argumentation</h3>
+            </div>
+            <div class="argument-box">
+                <h4>These 1: „Curriculum-Update ist überfällig – KI, Klima, Finanzen gehören in die Schule."</h4>
+                <p><span class="pro">Pro:</span> Informatik ab Klasse 5 (M1) bereitet auf digitale Arbeitswelt vor; KI-Grundlagen, Klimawandel, Finanzkompetenz sind Kernkompetenzen 2025+; bundesweite Standards (M2) sichern Vergleichbarkeit; DigitalPakt 2.0 (M3) schafft technische Basis.</p>
+                <p><span class="contra">Gegenargument:</span> „Zu viel neue Inhalte – Grundlagen leiden."</p>
+                <p><span class="rebuttal">Rebuttal:</span> Curriculum ersetzt veraltete Inhalte; Informatik integriert Mathematik/Logik; internationale Vergleiche (Estland, Finnland) zeigen: digitale + klassische Kompetenzen funktionieren parallel. PISA-Score steigt auf 500 (KPI). Das ist Progress für die Zukunft.</p>
+            </div>
+            <div class="argument-box">
+                <h4>These 2: „Bundesweite Mindeststandards sind kein Föderalismus-Bruch – sondern Chancengleichheit."</h4>
+                <p><span class="pro">Pro:</span> Kompetenztests Klasse 4, 8, 10 (M2) + individuelle Förderung sichern, dass kein Kind zurückbleibt; Maker-Labs (M4) ermöglichen praktisches Lernen; Risikoschüler sinken von 30 % auf 20 %.</p>
+                <p><span class="contra">Gegenargument:</span> „Länder sollen selbst entscheiden."</p>
+                <p><span class="rebuttal">Rebuttal:</span> Mindeststandards lassen Ländern Raum für zusätzliche Inhalte; Bundesverfassungsgericht erlaubt Rahmengesetzgebung bei Bildung; Umzug zwischen Ländern darf nicht Bildungsbiografie zerstören. Das ist Gemeinschaft mit Verantwortung.</p>
+            </div>
+        </div>
+
+        <!-- Platzhalter für weitere Punkte -->
+        <div id="punkt-2" class="detail-card">
+            <h2>02 — Bürgergeld <a href="Parteipunkte_Detail.html#B4" class="glossary-ref">[B4]</a></h2>
+            
+            <div class="section-header">
+                <h3>Jetzige Lage & Analyse</h3>
+            </div>
+            <div class="section-content">
+                <ul>
+                    <li><strong>Regelbedarf 2025:</strong> Alleinstehende 563 €/Monat</li>
+                    <li><strong>Leistungsbezug:</strong> Jahresdurchschnitt 2024 rund 3,99 Mio. Bürgergeld-Berechtigte</li>
+                    <li><strong>Haushaltsbudget:</strong> ~1.570 €/Monat (davon 1.123 € Grundsicherung)</li>
+                    <li><strong>Zuverdienstregeln:</strong> Effektive Grenzbelastung <a href="Parteipunkte_Detail.html#B5" class="glossary-ref">[B5]</a> oft 70–90 %</li>
+                    <li><strong>Übergang in Beschäftigung:</strong> ca. 15 % pro Jahr</li>
+                    <li><strong>Verweildauer:</strong> Median ~2,5 Jahre; ~60 % Langzeitarbeitslose</li>
+                </ul>
+            </div>
+
+            <div class="section-header">
+                <h3>Zielbild</h3>
+            </div>
+            <div class="section-content">
+                <p><strong>Arbeit soll sich spürbar lohnen.</strong> Mehr Netto bei Aufnahme/Ausweitung von Beschäftigung, ohne das Existenzminimum zu gefährden. Pflichten klar, Förderung verbindlich (Qualifizierungspfad).</p>
+            </div>
+
+            <div class="section-header">
+                <h3>Maßnahmen</h3>
+            </div>
+            <div class="massnahmen-grid">
+                <div class="massnahme-card">
+                    <h4>M1: Zuverdienstzonen reformieren</h4>
+                    <p>0–520 € Freibetrag 100 %, 521–1.000 € Entzug 40 %, >1.000 € Entzug 60 %</p>
+                    <p><strong>Ziel:</strong> Grenzbelastung maximal 60 %</p>
+                    <p><strong>Kosten:</strong> ~1–2 Mrd. €/Jahr</p>
+                </div>
+                <div class="massnahme-card">
+                    <h4>M2: Job-Start-Bonus</h4>
+                    <p>1.000 € bei Aufnahme SV‑pflichtiger Beschäftigung ≥ 6 Monate</p>
+                    <p><strong>Auszahlung:</strong> 500 € nach 3 Monaten + 500 € nach 6 Monaten</p>
+                    <p><strong>Kosten:</strong> ~0,5–0,8 Mrd. €/Jahr</p>
+                </div>
+                <div class="massnahme-card">
+                    <h4>M3: Verpflichtende Qualifizierungs‑Module</h4>
+                    <p>Kurzmodule 3–12 Wochen mit Zertifikat ab Monat 3 im Leistungsbezug</p>
+                    <p><strong>Sanktionen:</strong> Bei wiederholter Nichtteilnahme</p>
+                    <p><strong>Kosten:</strong> ~0,8–1,2 Mrd. €/Jahr</p>
+                </div>
+                <div class="massnahme-card">
+                    <h4>M4: Digitale Plattform „Mein Jobpfad“</h4>
+                    <p>Zentrale Übersicht, Matching, Nudging, App</p>
+                    <p><strong>Kosten:</strong> ~0,2–0,3 Mrd. € Einmal + 50 Mio. €/Jahr Betrieb</p>
+                </div>
+            </div>
+
+            <div class="kpi-box">
+                <strong>KPIs:</strong><br>
+                • Abgänge in Erwerbstätigkeit: ~15 % (2024) → 18 % (2028)<br>
+                • Verweildauer: ~2,5 Jahre (2024) → 2,0 Jahre (2028)<br>
+                • Teilnahme Qualifizierung: 80 % (2028)
+            </div>
+
+            <div class="section-header">
+                <h3>Argumentation</h3>
+            </div>
+            <div class="argument-box">
+                <h4>These: „Arbeit zuerst“ – jede zusätzliche Stunde muss sich sofort auszahlen</h4>
+                <p><span class="pro">Pro:</span> Flachere Entzugsraten (max. 60 %) erhöhen Anreize; Bonus erleichtert Einstieg.</p>
+                <p><span class="contra">Gegenargument:</span> „Mehr Freibetrag = mehr Kosten & weniger Zielgenauigkeit.“</p>
+                <p><span class="rebuttal">Rebuttal:</span> Zonen + Deckel begrenzen Mitnahme; höhere Beschäftigung refinanziert einen Teil.</p>
+            </div>
+        </div>
+
+        <div id="punkt-3" class="detail-card">
+            <h2>03 — Fachkräftemangel</h2>
+            
+            <div class="section-header">
+                <h3>Jetzige Lage & Analyse</h3>
+            </div>
+            <div class="section-content">
+                <ul>
+                    <li><strong>Offene Stellen:</strong> ca. 1,7 Mio. (Jahresdurchschnitt)</li>
+                    <li><strong>Fachkräftelücke <a href="Parteipunkte_Detail.html#B6" class="glossary-ref">[B6]</a>:</strong> ~500.000–600.000 Mangelstellen</li>
+                    <li><strong>Vakanzzeit:</strong> Median 139 Tage (MINT <a href="Parteipunkte_Detail.html#B36" class="glossary-ref">[B36]</a>/Handwerk/Pflege oft >150 Tage)</li>
+                    <li><strong>Anerkennung ausländischer Abschlüsse:</strong> 6–12 Monate; ~50.000 Anträge/Jahr</li>
+                    <li><strong>Zuwanderung Fachkräfte:</strong> ca. 250.000 Erwerbsmigranten/Jahr</li>
+                    <li><strong>Weiterbildungsbeteiligung:</strong> ~15 %/Jahr</li>
+                </ul>
+            </div>
+
+            <div class="section-header">
+                <h3>Zielbild</h3>
+            </div>
+            <div class="section-content">
+                <p><strong>Skills Fast Track, Anerkennung ≤ 90 Tage, smarte Migration.</strong> Progress durch beschleunigte Verfahren; Gemeinschaft durch Integration; Tatkraft durch One‑Stop‑Lösungen.</p>
+            </div>
+
+            <div class="section-header">
+                <h3>Maßnahmen</h3>
+            </div>
+            <div class="massnahmen-grid">
+                <div class="massnahme-card">
+                    <h4>M1: Skills Fast Track</h4>
+                    <p>6–12 Monats‑Intensivlehrgänge in MINT, Pflege, Handwerk</p>
+                    <p><strong>Volumen:</strong> 50.000 Plätze/Jahr, Unterhalt 1.200 €/Monat</p>
+                    <p><strong>Kosten:</strong> ~3–4 Mrd. €/Jahr</p>
+                </div>
+                <div class="massnahme-card">
+                    <h4>M2: One‑Stop‑Anerkennung</h4>
+                    <p>Zentrale Anlaufstelle, digitale Vorprüfung</p>
+                    <p><strong>Ziel:</strong> Verfahren ≤ 90 Tage; Kapazität 100.000/Jahr</p>
+                    <p><strong>Kosten:</strong> ~0,3–0,5 Mrd. €/Jahr</p>
+                </div>
+                <div class="massnahme-card">
+                    <h4>M3: Fast‑Track‑Visa</h4>
+                    <p>Entscheidung binnen 4 Wochen; Pre‑Approval für qualifizierte Bewerber</p>
+                    <p><strong>Plattform:</strong> „Work in Germany Plus“</p>
+                    <p><strong>Kosten:</strong> ~0,2–0,3 Mrd. €/Jahr</p>
+                </div>
+                <div class="massnahme-card">
+                    <h4>M4: Ausbildungs-/Weiterbildungsfonds</h4>
+                    <p>Arbeitgeber‑Umlage 0,5 % Lohnsumme; Förderung betrieblicher Weiterbildung</p>
+                    <p><strong>Ziel:</strong> +30 % Weiterbildungsteilnahme</p>
+                    <p><strong>Kosten:</strong> ~2–3 Mrd. €/Jahr</p>
+                </div>
+            </div>
+
+            <div class="kpi-box">
+                <strong>KPIs:</strong><br>
+                • Anerkennungsdauer: 6–12 Monate (2024) → ≤ 90 Tage (2028)<br>
+                • Fachkräftelücke: 500.000–600.000 (2024) → −25 % (2030)<br>
+                • Skills‑Teilnahme: 50.000/Jahr (2029)
+            </div>
+
+            <div class="section-header">
+                <h3>Argumentation</h3>
+            </div>
+            <div class="argument-box">
+                <h4>These: „Mehr Fachkräfte – schnell und gezielt“</h4>
+                <p><span class="pro">Pro:</span> One‑Stop + Fast‑Track verkürzen Wartezeiten drastisch; 90‑Tage‑Anerkennung + 4‑Wochen‑Visa = Standortvorteil.</p>
+                <p><span class="contra">Gegenargument:</span> „Zu viel Migration überfordert Kommunen.“</p>
+                <p><span class="rebuttal">Rebuttal:</span> Gezielte Steuerung auf Mangelberufe; Integration über Sprachkurse/Anerkennungszentren; +40.000 Fachkräfte/Jahr.</p>
+            </div>
+        </div>
+
+        <div id="punkt-5" class="detail-card">
+            <h2>05 — Gewerkschaften & Sozialpartnerschaft <a href="Parteipunkte_Detail.html#B40" class="glossary-ref">[B40]</a></h2>
+            <div class="section-header"><h3>Jetzige Lage & Analyse</h3></div>
+            <div class="section-content"><ul>
+                <li><strong>Tarifbindung <a href="Parteipunkte_Detail.html#B1" class="glossary-ref">[B1]</a>:</strong> ca. 49% der Beschäftigten (West: ~52%, Ost: ~43%)</li>
+                <li><strong>Gewerkschaftsmitglieder:</strong> ~6 Mio. (Organisationsgrad ~16%)</li>
+                <li><strong>Lohnabstand:</strong> +8–12% höhere Löhne in Tarifbindung</li>
+                <li><strong>Weiterbildung:</strong> 20–25 Std./Jahr in Tarifbranchen vs. 10–15 Std. nicht-tarifgebunden</li>
+            </ul></div>
+            <div class="section-header"><h3>Zielbild</h3></div>
+            <div class="section-content"><p><strong>Starke Sozialpartnerschaft als Standortvorteil.</strong></p></div>
+            <div class="section-header"><h3>Maßnahmen</h3></div>
+            <div class="massnahmen-grid">
+                <div class="massnahme-card"><h4>M1: Tariftreue öffentliche Vergabe</h4><p>Aufträge >25.000 € nur an Unternehmen mit Tarifbindung</p><p><strong>Kosten:</strong> Keine direkten Kosten</p></div>
+                <div class="massnahme-card"><h4>M2: Branchen-Weiterbildungsfonds</h4><p>Umlage 0,3% Lohnsumme; Start in 5 Pilotbranchen</p><p><strong>Kosten:</strong> ~1,5–2 Mrd. €/Jahr</p></div>
+                <div class="massnahme-card"><h4>M3: Sozialpartner im Transformationsrat</h4><p>Beratung zu Strukturwandel, Qualifizierung</p><p><strong>Kosten:</strong> ~20–30 Mio. €/Jahr</p></div>
+                <div class="massnahme-card"><h4>M4: Allgemeinverbindlichkeit <a href="Parteipunkte_Detail.html#B39" class="glossary-ref">[B39]</a> erleichtern</h4><p>Quorum 50% → 40%; +10 Tarifverträge bis 2028</p><p><strong>Kosten:</strong> Keine</p></div>
+            </div>
+            <div class="kpi-box"><strong>KPIs:</strong><br>• Tarifabdeckung: ~49% (2024) → 54% (2029)<br>• Weiterbildung: 20–25 Std./Jahr → 40 Std./Jahr (2029)</div>
+            
+            <div class="section-header">
+                <h3>Argumentation</h3>
+            </div>
+            <div class="argument-box">
+                <h4>These 1: „Tarifbindung ist kein Relikt – sie ist Standortvorteil und Innovationsmotor."</h4>
+                <p><span class="pro">Pro:</span> Tarifbindung (+5 pp via M1+M4) bringt höhere Löhne (+8–12 %), bessere Arbeitsbedingungen, stabilere Belegschaften; Weiterbildungsfonds (M2) stärkt Qualifizierung (+100 % Weiterbildungsstunden); Sozialpartner im Transformationsrat (M3) sichern sozialverträglichen Strukturwandel.</p>
+                <p><span class="contra">Gegenargument:</span> „Tarifverträge sind Bürokratie und schränken Flexibilität ein."</p>
+                <p><span class="rebuttal">Rebuttal:</span> Tarifverträge schaffen Planbarkeit für beide Seiten; Sozialpartner vereinbaren Öffnungsklauseln, wo nötig; internationale Standorte (Schweden, Österreich, Schweiz) zeigen: hohe Tarifbindung = hohe Produktivität. Wir machen das zum Wettbewerbsvorteil. Das ist Progress und Verlässlichkeit.</p>
+            </div>
+            <div class="argument-box">
+                <h4>These 2: „Staat darf Tarifautonomie nicht aushöhlen – aber fördern darf er."</h4>
+                <p><span class="pro">Pro:</span> M1 (Tariftreue) und M4 (Allgemeinverbindlichkeit) setzen Anreize, zwingen niemanden; M2 (Weiterbildungsfonds) ist Branchenlösung unter Sozialpartner-Kontrolle; M3 (Transformationsrat) gibt Gewerkschaften/Arbeitgebern Mitsprache.</p>
+                <p><span class="contra">Gegenargument:</span> „Zu viel Staat schwächt freie Tarifverhandlungen."</p>
+                <p><span class="rebuttal">Rebuttal:</span> Wir greifen nicht in Tarifverhandlungen ein; wir schaffen Rahmenbedingungen, die Tarifbindung attraktiv machen. Vergabevorteil (M1) ist marktwirtschaftlich; Weiterbildungsfonds (M2) finanzieren Unternehmen selbst. Sozialpartnerschaft bleibt frei und stark – das ist Gemeinschaft auf Augenhöhe.</p>
+            </div>
+        </div>
+
+        <div id="punkt-6" class="detail-card">
+            <h2>06 — Steuerpolitik & Kaufkraft</h2>
+            <div class="section-header"><h3>Jetzige Lage & Analyse</h3></div>
+            <div class="section-content"><ul>
+                <li><strong>Steuereinnahmen:</strong> ~880 Mrd. €/Jahr (Bund/Länder/Gemeinden)</li>
+                <li><strong>MwSt <a href="Parteipunkte_Detail.html#B12" class="glossary-ref">[B12]</a>-Sätze:</strong> 19% Regel, 7% ermäßigt</li>
+                <li><strong>Investitionsquote öffentlich:</strong> ~2,5% BIP <a href="Parteipunkte_Detail.html#B37" class="glossary-ref">[B37]</a> (OECD: 3,5%)</li>
+                <li><strong>Schuldenbremse <a href="Parteipunkte_Detail.html#B10" class="glossary-ref">[B10]</a>:</strong> Max. 0,35% BIP Bund; Investitionen nicht privilegiert</li>
+            </ul></div>
+            <div class="section-header"><h3>Zielbild</h3></div>
+            <div class="section-content"><p><strong>Kaufkraft stärken, Investitionen anreizen, Investitionsregel <a href="Parteipunkte_Detail.html#B11" class="glossary-ref">[B11]</a> statt Austerität.</strong></p></div>
+            <div class="section-header"><h3>Maßnahmen</h3></div>
+            <div class="massnahmen-grid">
+                <div class="massnahme-card"><h4>M1: MwSt-Senkung Grundbedarf</h4><p>Ermäßigter Satz 7% → 5% für Grundnahrungsmittel, ÖPNV-Nahverkehr</p><p><strong>Kosten:</strong> ~4–6 Mrd. €/Jahr</p></div>
+                <div class="massnahme-card"><h4>M2: Investitionsfreibetrag</h4><p>20% für grüne/digitale Anlagen 2026–2029</p><p><strong>Kosten:</strong> ~3–5 Mrd. €/Jahr</p></div>
+                <div class="massnahme-card"><h4>M3: Reform Schuldenbremse</h4><p>Investitionsregel: max. 1% BIP zusätzlich = ~40 Mrd. €/Jahr</p><p><strong>Kosten:</strong> 40 Mrd. € Spielraum</p></div>
+                <div class="massnahme-card"><h4>M4: Kalte Progression <a href="Parteipunkte_Detail.html#B13" class="glossary-ref">[B13]</a> ausgleichen</h4><p>Jährliche Anpassung Tarifeckwerte an Inflation</p><p><strong>Kosten:</strong> ~5 Mrd. €/Jahr</p></div>
+            </div>
+            <div class="kpi-box"><strong>KPIs:</strong><br>• Investitionsquote: 2,5% → 3,5% BIP (2029)<br>• Reale Konsumausgaben: +1,5% p.a.<br>• Unternehmensinvestitionen: +3% p.a.</div>
+            
+            <div class="section-header">
+                <h3>Argumentation</h3>
+            </div>
+            <div class="argument-box">
+                <h4>These 1: „MwSt.-Senkung auf Grundbedarf hilft gezielt – nicht mit der Gießkanne."</h4>
+                <p><span class="pro">Pro:</span> Senkung 7 % → 5 % (M1) entlastet Haushalte mit geringem Einkommen überproportional (höherer Anteil Grundbedarf am Budget); Kosten 4–6 Mrd. €/Jahr vertretbar; Kaufkraft steigt → Konsum +1,5 % p.a. (KPI).</p>
+                <p><span class="contra">Gegenargument:</span> „MwSt.-Senkung kommt auch Reichen zugute."</p>
+                <p><span class="rebuttal">Rebuttal:</span> Richtig, aber relative Entlastung ist bei unteren Einkommen höher (Grundbedarf = größerer Budgetanteil); gezielte Senkung (nicht Regelsatz) begrenzt Mitnahme. Alternative wäre komplexe Transfererhöhung – MwSt. wirkt sofort. Das ist Gemeinschaft in der Praxis.</p>
+            </div>
+            <div class="argument-box">
+                <h4>These 2: „Schuldenbremse ohne Investitionsregel ist Wachstumsbremse – Reform ist überfällig."</h4>
+                <p><span class="pro">Pro:</span> Investitionsregel (M3) schafft ~40 Mrd. €/Jahr Spielraum für Bildung, Digitalisierung, Infrastruktur, Klima; Tilgung über 30 Jahre = generationengerecht; Investitionsquote steigt auf 3,5 % (KPI); OECD-Durchschnitt erreicht.</p>
+                <p><span class="contra">Gegenargument:</span> „Mehr Schulden belasten künftige Generationen."</p>
+                <p><span class="rebuttal">Rebuttal:</span> Nicht-Investieren belastet künftige Generationen viel mehr – verfallende Schulen, marode Brücken, verpasste Digitalisierung. Investitionsregel unterscheidet konsumtive (weiter begrenzt) von investiven Ausgaben (privilegiert). Schulden für Zukunftsausgaben sind ökonomisch sinnvoll. Das ist Progress, nicht Austerität.</p>
+            </div>
+        </div>
+
+        <div id="punkt-7" class="detail-card">
+            <h2>07 — Digitalisierung & Verwaltung</h2>
+            <div class="section-header"><h3>Jetzige Lage & Analyse</h3></div>
+            <div class="section-content"><ul>
+                <li><strong>FTTH <a href="Parteipunkte_Detail.html#B14" class="glossary-ref">[B14]</a>-Quote:</strong> ~25% der Haushalte</li>
+                <li><strong>5G-Abdeckung:</strong> ~90% Bevölkerung, nur ~50% Fläche</li>
+                <li><strong>Online-Verwaltung:</strong> ~30% der Top-100-Services vollständig online</li>
+                <li><strong>eID <a href="Parteipunkte_Detail.html#B16" class="glossary-ref">[B16]</a>-Nutzung:</strong> ~10% nutzen Personalausweis online</li>
+            </ul></div>
+            <div class="section-header"><h3>Zielbild</h3></div>
+            <div class="section-content"><p><strong>Glasfaser 100%, 5G/6G flächendeckend, föderale Cloud, Once-Only-Prinzip <a href="Parteipunkte_Detail.html#B15" class="glossary-ref">[B15]</a>.</strong></p></div>
+            <div class="section-header"><h3>Maßnahmen</h3></div>
+            <div class="massnahmen-grid">
+                <div class="massnahme-card"><h4>M1: Glasfaser-Offensive</h4><p>FTTH 100% bis 2029; Pflicht Neubau/Sanierung</p><p><strong>Kosten:</strong> 15 Mrd. € Förderung</p></div>
+                <div class="massnahme-card"><h4>M2: 5G/6G-Flächendeckung</h4><p>100% Bevölkerung, 90% Fläche bis 2028</p><p><strong>Kosten:</strong> ~3–5 Mrd. €</p></div>
+                <div class="massnahme-card"><h4>M3: Föderale Cloud</h4><p>Zentrale Infrastruktur Bund/Länder/Kommunen; Once-Only</p><p><strong>Kosten:</strong> 2–3 Mrd. € Aufbau</p></div>
+                <div class="massnahme-card"><h4>M4: Interoperabilitätsstandards</h4><p>Verbindliche APIs; eID-first-Design</p><p><strong>Kosten:</strong> ~0,5–1 Mrd. €/Jahr</p></div>
+            </div>
+            <div class="kpi-box"><strong>KPIs:</strong><br>• FTTH: 25% → 100% (2029)<br>• Online-Verwaltung: 30% → 100% (2028)<br>• eID-Nutzung: 10% → 50% (2029)</div>
+            
+            <div class="section-header">
+                <h3>Argumentation</h3>
+            </div>
+            <div class="argument-box">
+                <h4>These 1: „Digitale Souveränität heißt eigene Infrastruktur – föderale Cloud statt US-Hyperscaler."</h4>
+                <p><span class="pro">Pro:</span> Föderale Cloud (M3) sichert DSGVO-Konformität, Datenschutz, Unabhängigkeit; Once-Only spart Bürger/Unternehmen Zeit; zentrale Plattform ermöglicht schnelle Innovation (neue Services binnen Wochen statt Jahren).</p>
+                <p><span class="contra">Gegenargument:</span> „Zu teuer; US-Clouds sind billiger und ausgereifter."</p>
+                <p><span class="rebuttal">Rebuttal:</span> Abhängigkeit von US-Hyperscalern ist Sicherheitsrisiko (CLOUD Act, Datenzugriff); föderale Cloud kostet 2–3 Mrd. € Aufbau + 0,5 Mrd. €/Jahr – vertretbar für Souveränität. Estland zeigt: eigene Plattform (X-Road) funktioniert, ist günstiger langfristig. Das ist Progress mit Verantwortung.</p>
+            </div>
+            <div class="argument-box">
+                <h4>These 2: „Glasfaser bis 2029 ist machbar – wenn wir Bürokratie abbauen und Pflichten setzen."</h4>
+                <p><span class="pro">Pro:</span> Glasfaser-Pflicht Neubau/Sanierung (M1) + beschleunigte Genehmigungen + 15 Mrd. € Förderung = 100 % FTTH bis 2029; 5G/6G (M2) schließt ländliche Räume an; Standortfaktor Nummer 1 für Unternehmen.</p>
+                <p><span class="contra">Gegenargument:</span> „Zu ambitioniert; Fachkräftemangel bremst Ausbau."</p>
+                <p><span class="rebuttal">Rebuttal:</span> Fachkräfte-Offensive (siehe Fachkräftemangel M1) qualifiziert Tiefbauer, Elektriker; Co-Investitionen mit Telcos teilen Kosten; internationale Beispiele (Südkorea 100 % FTTH in 8 Jahren) zeigen: mit politischem Willen geht es. Das ist Tatkraft, nicht Träumerei.</p>
+            </div>
+        </div>
+
+        <div id="punkt-8" class="detail-card">
+            <h2>08 — Industriesektor & Schlüsseltechnologien</h2>
+            <div class="section-header"><h3>Jetzige Lage & Analyse</h3></div>
+            <div class="section-content"><ul>
+                <li><strong>Verarbeitendes Gewerbe:</strong> ~20% BIP <a href="Parteipunkte_Detail.html#B37" class="glossary-ref">[B37]</a> (~840 Mrd. €)</li>
+                <li><strong>F&E-Quote <a href="Parteipunkte_Detail.html#B18" class="glossary-ref">[B18]</a>:</strong> ~3,1% BIP (Ziel: 3,5%)</li>
+                <li><strong>Halbleiter-Produktion DE:</strong> <5% globaler Markt</li>
+                <li><strong>Batteriezellen:</strong> ~30 GWh Kapazität (Bedarf 2030: 200 GWh)</li>
+            </ul></div>
+            <div class="section-header"><h3>Zielbild</h3></div>
+            <div class="section-content"><p><strong>Reshoring kritischer Wertschöpfung; Industriestrategie 2035 für Halbleiter, Batterien, MedTech, CleanTech.</strong></p></div>
+            <div class="section-header"><h3>Maßnahmen</h3></div>
+            <div class="massnahmen-grid">
+                <div class="massnahme-card"><h4>M1: IPCEI <a href="Parteipunkte_Detail.html#B17" class="glossary-ref">[B17]</a> Halbleiter/Mikroelektronik</h4><p>Matching 40:60; Verdopplung Produktionskapazität</p><p><strong>Kosten:</strong> ~8–12 Mrd. €</p></div>
+                <div class="massnahme-card"><h4>M2: Batteriezell-Offensive</h4><p>200 GWh bis 2030; Recycling; Festkörper-Forschung</p><p><strong>Kosten:</strong> ~5–8 Mrd. €</p></div>
+                <div class="massnahme-card"><h4>M3: Tech-Transfer-Zentren</h4><p>20 Zentren MedTech/CleanTech bundesweit</p><p><strong>Kosten:</strong> ~2–3 Mrd. €</p></div>
+                <div class="massnahme-card"><h4>M4: Matching-Funds F&E</h4><p>Bund verdoppelt private F&E bis 500 Mio. €/Unternehmen</p><p><strong>Kosten:</strong> ~5–7 Mrd. €/Jahr</p></div>
+            </div>
+            <div class="kpi-box"><strong>KPIs:</strong><br>• F&E-Quote: 3,1% → 3,5% (2029)<br>• Produktionsanteil: 20% → 22% (2029)<br>• Halbleitermarkt: <5% → 8% (2030)</div>
+            
+            <div class="section-header">
+                <h3>Argumentation</h3>
+            </div>
+            <div class="argument-box">
+                <h4>These 1: „Industriepolitik ist zurück – und das ist gut so. Strategische Autonomie kostet, zahlt sich aber aus."</h4>
+                <p><span class="pro">Pro:</span> IPCEI-Programme (M1, M2) sichern kritische Wertschöpfung (Chips, Batterien); Matching-Funds (M5) hebeln private F&E; Technologietransferzentren (M3) beschleunigen Innovation. F&E-Quote steigt auf 3,5 %, Produktionsanteil auf 22 %.</p>
+                <p><span class="contra">Gegenargument:</span> „Zu viel Staat; Markt soll entscheiden."</p>
+                <p><span class="rebuttal">Rebuttal:</span> Markt hat versagt – Abhängigkeiten von Asien (Taiwan, China) sind Sicherheitsrisiko; USA (CHIPS Act), EU (IPCEI) machen vor, wie es geht. Wir setzen Rahmenbedingungen, Unternehmen investieren 60 % selbst. Das ist Progress mit Pragmatismus.</p>
+            </div>
+            <div class="argument-box">
+                <h4>These 2: „Industriestandort Deutschland sichern heißt Planungsbeschleunigung – 12 Monate Genehmigung sind machbar."</h4>
+                <p><span class="pro">Pro:</span> Nationale Industriestrategie (M4) priorisiert Schlüsselprojekte; One-Stop <a href="Parteipunkte_Detail.html#B25" class="glossary-ref">[B25]</a>-Genehmigungen; Standortgarantien gegen Investitionszusagen; Vorbild: Intel Magdeburg (Genehmigung in 9 Monaten dank Task Force).</p>
+                <p><span class="contra">Gegenargument:</span> „Umweltstandards werden ausgehöhlt."</p>
+                <p><span class="rebuttal">Rebuttal:</span> Standards bleiben; Verfahren werden parallel statt seriell geführt; digitale Antragsbearbeitung; Personalaufstockung Genehmigungsbehörden. 12 Monate sind ambitioniert, aber mit politischem Willen machbar – siehe Frankreich, Niederlande. Das ist Tatkraft, nicht Umweltsünde.</p>
+            </div>
+        </div>
+
+        <div id="punkt-9" class="detail-card">
+            <h2>09 — Infrastruktur & Mobilität</h2>
+            <div class="section-header"><h3>Jetzige Lage & Analyse</h3></div>
+            <div class="section-content"><ul>
+                <li><strong>Pünktlichkeit Bahn:</strong> ~65% (<6 Min. Verspätung)</li>
+                <li><strong>Streckennetz:</strong> ~33.000 km; ~4.000 Brücken sanierungsbedürftig</li>
+                <li><strong>Investitionen Schiene:</strong> ~17 Mrd. €/Jahr (Bedarf: 25 Mrd. €)</li>
+                <li><strong>ÖPNV-Anteil:</strong> ~10% Modal Split <a href="Parteipunkte_Detail.html#B19" class="glossary-ref">[B19]</a></li>
+            </ul></div>
+            <div class="section-header"><h3>Zielbild</h3></div>
+            <div class="section-content"><p><strong>Erhalt zuerst, Engpassbeseitigung, Deutschlandtakt <a href="Parteipunkte_Detail.html#B20" class="glossary-ref">[B20]</a>, ÖPNV-Taktverdichtung.</strong></p></div>
+            <div class="section-header"><h3>Maßnahmen</h3></div>
+            <div class="massnahmen-grid">
+                <div class="massnahme-card"><h4>M1: Netz- und Schienen-Priorität</h4><p>+3 Mrd. €/Jahr für Brücken, Gleise; 4.000 Brücken bis 2030</p><p><strong>Kosten:</strong> ~20 Mrd. € über 5 Jahre</p></div>
+                <div class="massnahme-card"><h4>M2: Deutschlandtakt 2032</h4><p>10 Prioritätsprojekte; Planungsbeschleunigung</p><p><strong>Kosten:</strong> ~40–50 Mrd. €</p></div>
+                <div class="massnahme-card"><h4>M3: ÖPNV-Taktverdichtung</h4><p>15-Min-Takt Städte; 30-Min ländlich; 100 Strecken reaktivieren</p><p><strong>Kosten:</strong> ~10–15 Mrd. €</p></div>
+                <div class="massnahme-card"><h4>M4: Güterverkehr Schiene</h4><p>24/7-Gleise; 740-m-Züge; Güteranteil 18% → 25%</p><p><strong>Kosten:</strong> ~5–8 Mrd. €</p></div>
+            </div>
+            <div class="kpi-box"><strong>KPIs:</strong><br>• Pünktlichkeit: 65% → 85% (2029)<br>• ÖPNV-Anteil: 10% → 15% (2030)<br>• Güteranteil Schiene: 18% → 25% (2030)</div>
+            
+            <div class="section-header">
+                <h3>Argumentation</h3>
+            </div>
+            <div class="argument-box">
+                <h4>These 1: „Erhalt vor Ausbau – sanierte Brücken sind wichtiger als neue Autobahnen."</h4>
+                <p><span class="pro">Pro:</span> 4.000 Brücken sanierungsbedürftig (M1); Kollaps droht (siehe Rahmede-Talbrücke); +3 Mrd. €/Jahr Erhalt verhindert Sperrungen, Umwege, Staus; Engpassbeseitigung Korridore (M1, M4) schafft Kapazität ohne Flächenfraß.</p>
+                <p><span class="contra">Gegenargument:</span> „Ohne Neubau keine Entwicklung."</p>
+                <p><span class="rebuttal">Rebuttal:</span> Neubau nur bei nachgewiesenem Engpass (M5); Priorität: bestehende Infrastruktur funktionsfähig halten. Schweiz zeigt: Erhalt + Engpassbeseitigung = hohe Qualität ohne endlosen Neubau. Das ist Tatkraft mit Augenmaß.</p>
+            </div>
+            <div class="argument-box">
+                <h4>These 2: „Deutschlandtakt 2032 ist ambitioniert – aber machbar mit Planungsbeschleunigung."</h4>
+                <p><span class="pro">Pro:</span> Verfahren max. 5 Jahre (M2); parallele Genehmigungen; 10 Prioritätsprojekte; Finanzierung via Investitionsregel <a href="Parteipunkte_Detail.html#B11" class="glossary-ref">[B11]</a> (siehe Steuerpolitik M3); Vorbild: Schweiz 2000–2020 Bahn 2000 umgesetzt.</p>
+                <p><span class="contra">Gegenargument:</span> „Zu teuer; 40–50 Mrd. € nicht finanzierbar."</p>
+                <p><span class="rebuttal">Rebuttal:</span> Investitionsregel (Steuerpolitik M3) schafft ~40 Mrd. €/Jahr Spielraum; Deutschlandtakt kostet 40–50 Mrd. € über 6 Jahre = ~7–8 Mrd. €/Jahr – vertretbar. Nutzen: Pünktlichkeit +20 pp, ÖPNV-Anteil +5 pp, CO2-Reduktion ~5 Mio. t/Jahr. Das ist Progress, der sich rechnet.</p>
+            </div>
+        </div>
+
+        <div id="punkt-10" class="detail-card">
+            <h2>10 — Geopolitische Abhängigkeit & Resilienz</h2>
+            <div class="section-header"><h3>Jetzige Lage & Analyse</h3></div>
+            <div class="section-content"><ul>
+                <li><strong>Rohstoffabhängigkeiten:</strong> China dominiert Seltene Erden <a href="Parteipunkte_Detail.html#B21" class="glossary-ref">[B21]</a> (>70%), Lithium (>60%)</li>
+                <li><strong>Lieferketten <a href="Parteipunkte_Detail.html#B22" class="glossary-ref">[B22]</a>:</strong> ~30% Industrieimporte aus China; ~50% Halbleiter aus Taiwan/Südkorea</li>
+                <li><strong>Strategische Reserven:</strong> Kaum Reserven für kritische Rohstoffe</li>
+                <li><strong>Diversifizierung:</strong> Nur ~20% aus >3 Ländern</li>
+            </ul></div>
+            <div class="section-header"><h3>Zielbild</h3></div>
+            <div class="section-content"><p><strong>Diversifizierte Lieferketten, strategische Rohstoffpartnerschaften, nationale Reservespeicher.</strong></p></div>
+            <div class="section-header"><h3>Maßnahmen</h3></div>
+            <div class="massnahmen-grid">
+                <div class="massnahme-card"><h4>M1: Rohstoffallianzen</h4><p>Partnerschaften Australien, Kanada, Chile für Lithium, Kobalt</p><p><strong>Kosten:</strong> ~3–5 Mrd. €</p></div>
+                <div class="massnahme-card"><h4>M2: Trusted-Partner-Beschaffung</h4><p>Max. 30% Abhängigkeit von einem Land; Steuervorteile</p><p><strong>Kosten:</strong> ~1–2 Mrd. €/Jahr</p></div>
+                <div class="massnahme-card"><h4>M3: Nationale Reservespeicher</h4><p>6 Monate Bedarf für Lithium, Seltene Erden, Kobalt</p><p><strong>Kosten:</strong> 2–3 Mrd. € Aufbau</p></div>
+                <div class="massnahme-card"><h4>M4: Recycling-Offensive</h4><p>Urban Mining <a href="Parteipunkte_Detail.html#B23" class="glossary-ref">[B23]</a>; 30% Bedarf aus Recycling bis 2030</p><p><strong>Kosten:</strong> ~1–2 Mrd. €</p></div>
+            </div>
+            <div class="kpi-box"><strong>KPIs:</strong><br>• Diversifizierung: 20% → >50% aus >3 Ländern (2029)<br>• Lieferzeit: ~8 Monate → <5 Monate (2029)<br>• Recycling-Anteil: ~5% → 30% (2030)</div>
+            
+            <div class="section-header">
+                <h3>Argumentation</h3>
+            </div>
+            <div class="argument-box">
+                <h4>These 1: „Strategische Autonomie kostet – aber Abhängigkeit kostet mehr."</h4>
+                <p><span class="pro">Pro:</span> Rohstoffallianzen (M1) + Reservespeicher (M3) sichern Versorgung; Diversifizierung auf >50 % (KPI) reduziert Erpressbarkeit; Kosten 3–5 Mrd. € + 2–3 Mrd. € = 5–8 Mrd. € einmalig, danach ~1 Mrd. €/Jahr – günstig gegen Produktionsausfälle (Schaden 2021–2023: ~50 Mrd. €).</p>
+                <p><span class="contra">Gegenargument:</span> „Markt regelt das; Staat soll sich raushalten."</p>
+                <p><span class="rebuttal">Rebuttal:</span> Markt hat versagt – Just-in-Time brach zusammen; China nutzt Rohstoffe als Waffe (Exportbeschränkungen Gallium, Germanium 2023). Staat sichert strategische Güter, Unternehmen profitieren. Das ist Progress mit Weitsicht.</p>
+            </div>
+            <div class="argument-box">
+                <h4>These 2: „Recycling ist Rohstoffquelle – Urban Mining kann 30 % Bedarf decken."</h4>
+                <p><span class="pro">Pro:</span> 50 Mio. Althandys in Deutschland enthalten ~500 t Kobalt, ~50 t Seltene Erden; Recycling-Offensive (M5) fördert Fabriken, schafft Arbeitsplätze, reduziert Umweltschäden; Ziel 30 % Bedarf aus Recycling = strategische Reserve im eigenen Land.</p>
+                <p><span class="contra">Gegenargument:</span> „Recycling zu teuer, zu ineffizient."</p>
+                <p><span class="rebuttal">Rebuttal:</span> Technologie verbessert sich (90 % Recyclingquote Lithium-Ionen-Batterien heute möglich); Förderung (M5) senkt Kosten; EU-Batterieverordnung schreibt Recycling-Mindestquoten vor – wir machen daraus Standortvorteil. Das ist Tatkraft, die sich rechnet.</p>
+            </div>
+        </div>
+
+        <div id="punkt-11" class="detail-card">
+            <h2>11 — Wirtschaftsstandort Deutschland</h2>
+            <div class="section-header"><h3>Jetzige Lage & Analyse</h3></div>
+            <div class="section-content"><ul>
+                <li><strong>Genehmigungsdauer:</strong> Median ~24 Monate (Großprojekte 3–5 Jahre)</li>
+                <li><strong>Bürokratiekosten <a href="Parteipunkte_Detail.html#B26" class="glossary-ref">[B26]</a>:</strong> ~65 Mrd. €/Jahr für Unternehmen</li>
+                <li><strong>Industriestrompreis:</strong> ~18 ct/kWh (Frankreich ~10, USA ~7)</li>
+                <li><strong>Unternehmenssteuern:</strong> ~30% (EU-Durchschnitt ~21%)</li>
+            </ul></div>
+            <div class="section-header"><h3>Zielbild</h3></div>
+            <div class="section-content"><p><strong>Schnelle Verfahren, wenig Bürokratie, wettbewerbsfähige Energiepreise.</strong></p></div>
+            <div class="section-header"><h3>Maßnahmen</h3></div>
+            <div class="massnahmen-grid">
+                <div class="massnahme-card"><h4>M1: One-Stop <a href="Parteipunkte_Detail.html#B25" class="glossary-ref">[B25]</a>-Genehmigungen</h4><p>Zentrale Anlaufstelle; parallele Verfahren; max. 12 Monate</p><p><strong>Kosten:</strong> ~1–2 Mrd. €/Jahr</p></div>
+                <div class="massnahme-card"><h4>M2: Sunset-Clauses <a href="Parteipunkte_Detail.html#B24" class="glossary-ref">[B24]</a></h4><p>Jede Vorschrift 5 Jahre Verfallsdatum; Abbau 25% bis 2029</p><p><strong>Einsparung:</strong> ~10–15 Mrd. €/Jahr</p></div>
+                <div class="massnahme-card"><h4>M3: Industriestromverträge</h4><p>7–10 ct/kWh gegen Standortgarantien; 10 Jahre</p><p><strong>Kosten:</strong> ~3–5 Mrd. €/Jahr</p></div>
+                <div class="massnahme-card"><h4>M4: Unternehmenssteuern reformieren</h4><p>Körperschaftsteuer 15% → 12%; Gesamtbelastung ~25%</p><p><strong>Kosten:</strong> ~5–8 Mrd. €/Jahr</p></div>
+            </div>
+            <div class="kpi-box"><strong>KPIs:</strong><br>• Genehmigung: 24 Monate → 12 Monate (2029)<br>• Investitionen: +3% p.a.<br>• Ansiedlungen: +30%</div>
+            
+            <div class="section-header">
+                <h3>Argumentation</h3>
+            </div>
+            <div class="argument-box">
+                <h4>These 1: „12 Monate Genehmigung sind machbar – wenn wir Bürokratie abbauen und digital arbeiten."</h4>
+                <p><span class="pro">Pro:</span> One-Stop (M1) + digitale Anträge + Personalaufstockung + parallele Verfahren = Halbierung Genehmigungsdauer; Intel Magdeburg zeigt: 9 Monate mit Task Force; Sunset-Clauses (M2) reduzieren Vorschriften um 25 % = weniger Prüfaufwand.</p>
+                <p><span class="contra">Gegenargument:</span> „Standards werden ausgehöhlt."</p>
+                <p><span class="rebuttal">Rebuttal:</span> Standards bleiben; Verfahren werden effizienter, nicht laxer. Digitalisierung spart Zeit; Parallelbearbeitung auch. Frankreich, Irland machen vor: schnell + rechtsstaatlich geht. Das ist Tatkraft, nicht Deregulierung ohne Maß.</p>
+            </div>
+            <div class="argument-box">
+                <h4>These 2: „Industriestromverträge gegen Standortgarantien sind fair – und notwendig."</h4>
+                <p><span class="pro">Pro:</span> 7–10 ct/kWh (M3) = Wettbewerbsfähigkeit mit Frankreich/USA; Standortzusage + Beschäftigungsgarantie = Gegenleistung; Kosten 3–5 Mrd. €/Jahr günstiger als Abwanderung (BASF-Verlagerung kostet ~5.000 Arbeitsplätze + Wertschöpfung ~2 Mrd. €/Jahr).</p>
+                <p><span class="contra">Gegenargument:</span> „Subventionen sind Marktverzerrung."</p>
+                <p><span class="rebuttal">Rebuttal:</span> Energiepreise sind durch Netzentgelte/Umlagen künstlich hoch; wir korrigieren Verzerrung, schaffen sie nicht. Frankreich subventioniert via Atomstrom, USA via billiges Gas – wir brauchen Gleichstand. Standortgarantien sichern, dass Geld nicht verpufft. Das ist Progress mit Augenmaß.</p>
+            </div>
+        </div>
+
+        <div id="punkt-12" class="detail-card">
+            <h2>12 — Rente & Altersvorsorge</h2>
+            <div class="section-header"><h3>Jetzige Lage & Analyse</h3></div>
+            <div class="section-content"><ul>
+                <li><strong>Rentenbeitragssatz:</strong> 18,6% (Prognose 2035: 20–22% ohne Reform)</li>
+                <li><strong>Rentenniveau <a href="Parteipunkte_Detail.html#B27" class="glossary-ref">[B27]</a>:</strong> 48,2% des Durchschnittslohns</li>
+                <li><strong>Armutsrisiko 65+:</strong> ~17%</li>
+                <li><strong>Erwerbsbeteiligung 55+:</strong> ~73% (Potenzial: >80%)</li>
+            </ul></div>
+            <div class="section-header"><h3>Zielbild</h3></div>
+            <div class="section-content"><p><strong>Beitragssatz stabil, Altersarmut senken, flexible Übergänge.</strong></p></div>
+            <div class="section-header"><h3>Maßnahmen</h3></div>
+            <div class="massnahmen-grid">
+                <div class="massnahme-card"><h4>M1: Deutschland-Rente</h4><p>Kapitalgedeckte Zusatzsäule 2% + 1%; Opt-Out möglich</p><p><strong>Kosten:</strong> ~10–15 Mrd. €/Jahr Förderung</p></div>
+                <div class="massnahme-card"><h4>M2: Erwerbsbeteiligung 55+</h4><p>Flexible Altersteilzeit; Weiterbildung 50.000 Plätze/Jahr</p><p><strong>Kosten:</strong> ~2–3 Mrd. €/Jahr</p></div>
+                <div class="massnahme-card"><h4>M3: Flexible Übergänge</h4><p>Teilrente ab 60 ohne Abschläge; +0,5% Rentenpunkte >67</p><p><strong>Kosten:</strong> ~1–2 Mrd. €/Jahr</p></div>
+                <div class="massnahme-card"><h4>M4: Grundrente ausbauen</h4><p>Anspruch ab 30 Jahren; 1.200 €/Monat Vollzeit-Mindestlohn</p><p><strong>Kosten:</strong> ~3–5 Mrd. €/Jahr</p></div>
+            </div>
+            <div class="kpi-box"><strong>KPIs:</strong><br>• Beitragssatz: 18,6% → max. 20% (2035)<br>• Armutsrisiko 65+: 17% → 12% (2030)<br>• Erwerbsbeteiligung 55+: 73% → 80% (2029)</div>
+            
+            <div class="section-header">
+                <h3>Argumentation</h3>
+            </div>
+            <div class="argument-box">
+                <h4>These 1: „Kapitaldeckung <a href="Parteipunkte_Detail.html#B28" class="glossary-ref">[B28]</a> ist kein Neoliberalismus – sondern Demografie-Realismus."</h4>
+                <p><span class="pro">Pro:</span> Deutschland-Rente (M1) mit Opt-Out ist fair: automatische Teilnahme, aber Wahlfreiheit; 2 % + 1 % = 300 €/Monat Zusatzrente nach 40 Jahren; staatlicher Standardfonds (kein Profit-Interesse) nach AP-Fonds-Modell Schweden (Ø 8 % Rendite langfristig); Demografie lässt Umlage allein nicht zu (Babyboomer-Welle).</p>
+                <p><span class="contra">Gegenargument:</span> „Kapitalmarkt ist riskant; Altersvorsorge gehört nicht an die Börse."</p>
+                <p><span class="rebuttal">Rebuttal:</span> Breit diversifizierter Fonds (global, 60 % Aktien, 40 % Anleihen) minimiert Risiko; 40 Jahre Anlagehorizont gleicht Schwankungen aus; Schweden, Norwegen zeigen: funktioniert seit Jahrzehnten. Umlage allein führt zu 22 % Beitragssatz + sinkendem Niveau – das ist sozial ungerecht. Das ist Progress mit Verantwortung.</p>
+            </div>
+            <div class="argument-box">
+                <h4>These 2: „Länger arbeiten ist keine Zumutung – wenn es flexibel und gesund geht."</h4>
+                <p><span class="pro">Pro:</span> Flexible Übergänge (M3) erlauben Teilrente ab 60 + Teilzeitarbeit ohne Abschläge; Erwerbsbeteiligung 55+ (M2) via Weiterbildung, Gesundheitsprävention, Anreize (+0,5 % Rentenpunkte pro Jahr >67); Ziel 80 % Erwerbsbeteiligung 55+ = +7 pp = ~700.000 zusätzliche Beitragszahler.</p>
+                <p><span class="contra">Gegenargument:</span> „Nicht alle können bis 67 arbeiten – Handwerker, Pfleger sind mit 60 fertig."</p>
+                <p><span class="rebuttal">Rebuttal:</span> Flexibilität ist Kern: Teilzeit + Teilrente, Umschulung via M2, Grundrente (M4) für niedrige Einkommen. Wer kann, arbeitet länger (Anreiz +0,5 %); wer nicht kann, hat Absicherung. Das ist Gemeinschaft mit Augenmaß.</p>
+            </div>
+        </div>
+
+        <div id="punkt-13" class="detail-card">
+            <h2>13 — Kriminalität & Justiz</h2>
+            <div class="section-header"><h3>Jetzige Lage & Analyse</h3></div>
+            <div class="section-content"><ul>
+                <li><strong>Straftaten:</strong> ~5,6 Mio. polizeilich erfasst</li>
+                <li><strong>Aufklärungsquote:</strong> ~58% (Wohnungseinbruch ~18%)</li>
+                <li><strong>Verfahrensdauer:</strong> Median ~9 Monate Amtsgericht</li>
+                <li><strong>Rückfallquote <a href="Parteipunkte_Detail.html#B31" class="glossary-ref">[B31]</a>:</strong> ~46% binnen 3 Jahren</li>
+            </ul></div>
+            <div class="section-header"><h3>Zielbild</h3></div>
+            <div class="section-content"><p><strong>Sicherheit mit Datenfokus und Resozialisierung <a href="Parteipunkte_Detail.html#B32" class="glossary-ref">[B32]</a>.</strong></p></div>
+            <div class="section-header"><h3>Maßnahmen</h3></div>
+            <div class="massnahmen-grid">
+                <div class="massnahme-card"><h4>M1: Focus Deterrence <a href="Parteipunkte_Detail.html#B30" class="glossary-ref">[B30]</a></h4><p>Datenbasierte Hot-Spot-Prävention; 50 Pilotprojekte</p><p><strong>Kosten:</strong> ~0,5–1 Mrd. €/Jahr</p></div>
+                <div class="massnahme-card"><h4>M2: Schnellere Verfahren</h4><p>Digitalisierung Justiz; Personal +15%; Median 6 Monate</p><p><strong>Kosten:</strong> ~1–2 Mrd. €/Jahr</p></div>
+                <div class="massnahme-card"><h4>M3: Konsequente Vollstreckung</h4><p>Haftplätze +10%; elektronische Fußfessel</p><p><strong>Kosten:</strong> ~0,8–1,2 Mrd. €/Jahr</p></div>
+                <div class="massnahme-card"><h4>M4: Resozialisierung mit Arbeit</h4><p>100% Beschäftigung in Haft; Jobzusage vor Entlassung</p><p><strong>Kosten:</strong> ~0,8–1,2 Mrd. €/Jahr</p></div>
+            </div>
+            <div class="kpi-box"><strong>KPIs:</strong><br>• Aufklärungsquote: 58% → 65% (2029)<br>• Rückfall: 46% → 37% (2029)<br>• Verfahrensdauer: 9 Monate → 6 Monate (2028)</div>
+            
+            <div class="section-header">
+                <h3>Argumentation</h3>
+            </div>
+            <div class="argument-box">
+                <h4>These 1: „Hart und smart – Focus Deterrence + schnelle Verfahren + konsequente Vollstreckung = weniger Kriminalität."</h4>
+                <p><span class="pro">Pro:</span> Focus Deterrence (M1) reduziert Gewalt in Hot Spots um 30–50 % (Boston, Glasgow); schnelle Verfahren (M2) = schnelle Konsequenz = Abschreckung; konsequente Vollstreckung (M3) = Glaubwürdigkeit des Rechtsstaats; Kombination wirkt: Aufklärungsquote +7 pp (KPI).</p>
+                <p><span class="contra">Gegenargument:</span> „Law-and-Order bringt nichts; soziale Ursachen sind entscheidend."</p>
+                <p><span class="rebuttal">Rebuttal:</span> Wir kombinieren beides: Focus Deterrence ist Polizei + Sozialarbeit; Prävention Jugendkriminalität (M5) adressiert Ursachen; Resozialisierung (M4) verhindert Rückfall. Aber: Konsequenz muss sein – wer Straftaten begeht, muss mit schneller, sicherer Strafe rechnen. Das ist Gemeinschaft mit Verantwortung.</p>
+            </div>
+            <div class="argument-box">
+                <h4>These 2: „Resozialisierung funktioniert – wenn wir in Arbeit, Ausbildung, Betreuung investieren."</h4>
+                <p><span class="pro">Pro:</span> Arbeit/Ausbildung in Haft (M4) senkt Rückfallquote um 20–30 % (internationale Studien); 100 % Beschäftigung statt 70 % = mehr Skills, Struktur, Selbstwert; Übergangsmanagement + Jobzusage vor Entlassung = weniger Rückfall in alte Muster; Ziel: Rückfallquote −20 % (46 % → 37 %).</p>
+                <p><span class="contra">Gegenargument:</span> „Zu teuer; Haft soll Strafe sein, nicht Wellnesshotel."</p>
+                <p><span class="rebuttal">Rebuttal:</span> Rückfall kostet mehr: neues Opfer, neue Verfahren, neue Haft (~40.000 €/Jahr/Insasse); Investition 0,8–1,2 Mrd. €/Jahr spart langfristig Milliarden. Haft bleibt Strafe (Freiheitsentzug), aber Resozialisierung schützt Gesellschaft nach Entlassung. Das ist Tatkraft mit Weitsicht.</p>
+            </div>
+        </div>
+
+        <div id="punkt-14" class="detail-card">
+            <h2>14 — Berufsausbildung</h2>
+            <div class="section-header"><h3>Jetzige Lage & Analyse</h3></div>
+            <div class="section-content"><ul>
+                <li><strong>Unbesetzte Ausbildungsplätze:</strong> ~73.000</li>
+                <li><strong>Jugendliche ohne Ausbildung/Studium:</strong> ~240.000</li>
+                <li><strong>Ausbildungsquote <a href="Parteipunkte_Detail.html#B34" class="glossary-ref">[B34]</a>:</strong> ~4,8% (Rückgang seit 2010: 5,8%)</li>
+                <li><strong>Abbrecherquote:</strong> ~25% (Handwerk ~35%)</li>
+            </ul></div>
+            <div class="section-header"><h3>Zielbild</h3></div>
+            <div class="section-content"><p><strong>Attraktive, moderne Berufsausbildung; jeder findet passenden Platz.</strong></p></div>
+            <div class="section-header"><h3>Maßnahmen</h3></div>
+            <div class="massnahmen-grid">
+                <div class="massnahme-card"><h4>M1: Ausbildungsgarantie</h4><p>50.000 staatlich geförderte Plätze/Jahr; Übergang in Betrieb</p><p><strong>Kosten:</strong> ~1,5–2 Mrd. €/Jahr</p></div>
+                <div class="massnahme-card"><h4>M2: Azubi-Mobilitätsprämie</h4><p>Bis 500 €/Monat für Unterkunft >50 km Entfernung</p><p><strong>Kosten:</strong> ~0,5–0,8 Mrd. €/Jahr</p></div>
+                <div class="massnahme-card"><h4>M3: Ausbildungsfonds KMU <a href="Parteipunkte_Detail.html#B35" class="glossary-ref">[B35]</a></h4><p>Umlage 0,3% Lohnsumme; 5.000 €/Azubi Zuschuss</p><p><strong>Kosten:</strong> ~1–1,5 Mrd. €/Jahr</p></div>
+                <div class="massnahme-card"><h4>M4: Modernisierung Ausbildungsberufe</h4><p>30 Berufe: KI, Digitalisierung, Nachhaltigkeit integrieren</p><p><strong>Kosten:</strong> ~0,2–0,3 Mrd. €</p></div>
+            </div>
+            <div class="kpi-box"><strong>KPIs:</strong><br>• Unbesetzte Plätze: 73.000 → 36.500 (2029)<br>• Abbrecherquote: 25% → 15% (2029)<br>• Ausbildungsquote: 4,8% → 5,5% (2029)</div>
+            
+            <div class="section-header">
+                <h3>Argumentation</h3>
+            </div>
+            <div class="argument-box">
+                <h4>These 1: „Ausbildungsgarantie ist kein Sozialismus – sondern Investition in Fachkräfte von morgen."</h4>
+                <p><span class="pro">Pro:</span> 50.000 staatlich geförderte Plätze (M1) für Jugendliche ohne Chance; Übergang in Betrieb nach 6–12 Monaten; Azubi-Mobilitätsprämie (M2) erhöht Matching; unbesetzte Plätze −50 % (KPI); Fachkräftemangel wird langfristig reduziert.</p>
+                <p><span class="contra">Gegenargument:</span> „Zu teuer; Betriebe sollen selbst ausbilden."</p>
+                <p><span class="rebuttal">Rebuttal:</span> Ausbildungsfonds (M3) finanziert Betriebe mit 5.000 €/Azubi – Anreiz statt Zwang; Ausbildungsgarantie ist Auffangnetz, nicht Ersatz; Kosten 1,5–2 Mrd. €/Jahr zahlen sich aus: jeder ausgebildete Facharbeiter spart später ~50.000 € Rekrutierungskosten. Das ist Progress mit Weitsicht.</p>
+            </div>
+            <div class="argument-box">
+                <h4>These 2: „Berufsausbildung muss modern sein – digitale Kompetenzen, Nachhaltigkeit, KI gehören rein."</h4>
+                <p><span class="pro">Pro:</span> Modernisierung 30 Berufe (M4): KI-Grundlagen, digitale Tools, Nachhaltigkeit integriert; Berufsorientierung ab Klasse 7 (M5) zeigt Vielfalt; Abbrecherquote sinkt auf 15 % (KPI), weil Erwartungen passen.</p>
+                <p><span class="contra">Gegenargument:</span> „Berufsausbildung funktioniert seit Jahrzehnten – warum ändern?"</p>
+                <p><span class="rebuttal">Rebuttal:</span> Arbeitswelt 4.0 braucht neue Skills; ohne Anpassung verliert Berufsausbildung gegenüber Studium; internationale Vorbilder (Schweiz, Österreich) zeigen: moderne Berufsausbildung = Standortvorteil. Das ist Tatkraft für die Zukunft.</p>
+            </div>
+        </div>
+
+        <!-- Quellenverzeichnis -->
+        <div class="source-list">
+            <h2>Quellenverzeichnis</h2>
+            <p style="margin-bottom: 1.5rem; line-height: 1.8;"><strong>Alle Fakten sind mit offiziellen Quellen belegt.</strong> Quellenverweise im Format <span class="fact-ref" style="cursor: default;">[Qx]</span> verweisen auf folgende Quellen. Stand: November 2024/Januar 2025.</p>
+            
+            <ol>
+                <li id="Q1"><strong>Statistisches Bundesamt (2025):</strong> "Gesetzlicher Mindestlohn in Deutschland" – 12,82 €/h ab 01.01.2025<br><a href="https://www.destatis.de" target="_blank">https://www.destatis.de</a></li>
+                
+                <li id="Q2"><strong>Statistisches Bundesamt (2023-2025):</strong> Pressemitteilungen zu Reallöhnen – 2022: -4,0%, 2023: +0,1%, 2024: +3,1%<br><a href="https://www.destatis.de" target="_blank">https://www.destatis.de</a></li>
+                
+                <li id="Q3"><strong>Statistisches Bundesamt (2023/2025):</strong> Tarifbindung – rund 49% der Beschäftigten, West/Ost-Unterschiede<br><a href="https://www.destatis.de" target="_blank">https://www.destatis.de</a></li>
+                
+                <li id="Q4"><strong>Institut der deutschen Wirtschaft / WSI Tarifarchiv (2023/2024):</strong> Gewerkschaftlicher Organisationsgrad ~16%<br><a href="https://www.iwkoeln.de" target="_blank">https://www.iwkoeln.de</a> / <a href="https://www.wsi.de" target="_blank">https://www.wsi.de</a></li>
+                
+                <li id="Q5"><strong>Bundesministerium für Arbeit und Soziales (2024):</strong> Bürgergeld-Regelbedarfe 2025 – Alleinstehende 563 €/Monat<br><a href="https://www.bmas.de" target="_blank">https://www.bmas.de</a></li>
+                
+                <li id="Q6"><strong>Sozialpolitik-aktuell.de (2024):</strong> SGB-II-Datensammlung – Bestände, Langzeitbezug, 4 Mio. erwerbsfähige Leistungsberechtigte<br><a href="https://www.sozialpolitik-aktuell.de" target="_blank">https://www.sozialpolitik-aktuell.de</a></li>
+                
+                <li id="Q7"><strong>Bundesagentur für Arbeit / IAB (2024):</strong> Arbeitsmarktberichte – offene Stellen ~700.000, Fachkräfteengpässe<br><a href="https://statistik.arbeitsagentur.de" target="_blank">https://statistik.arbeitsagentur.de</a> / <a href="https://www.iab.de" target="_blank">https://www.iab.de</a></li>
+                
+                <li id="Q8"><strong>OECD (2023):</strong> PISA 2022 Country Note Germany – Risikoschüler ~25%, Bildungsausgaben<br><a href="https://www.oecd.org/pisa" target="_blank">https://www.oecd.org/pisa</a></li>
+                
+                <li id="Q9"><strong>Bundesministerium für Bildung und Forschung (2019-2024):</strong> DigitalPakt Schule – 6,5 Mrd. € Volumen<br><a href="https://www.bmbf.de/digitalpakt" target="_blank">https://www.bmbf.de/digitalpakt</a></li>
+                
+                <li id="Q10"><strong>Statistisches Bundesamt (2023):</strong> "Bürokratiekosten der Unternehmen bei rund 65 Milliarden Euro"<br><a href="https://www.destatis.de" target="_blank">https://www.destatis.de</a></li>
+                
+                <li id="Q11"><strong>Bundesverband Breitbandkommunikation (BREKO) (2024):</strong> "BREKO Marktanalyse 2024" – Glasfaser: Homes Passed 43,2%, Homes Connected 22,8%<br><a href="https://www.breko.de" target="_blank">https://www.breko.de</a></li>
+                
+                <li id="Q12"><strong>Fraunhofer ISE (2025):</strong> Stromerzeugung Deutschland 2024 – Erneuerbare ~59%<br><a href="https://www.energy-charts.info" target="_blank">https://www.energy-charts.info</a></li>
+                
+                <li id="Q13"><strong>Ariadne-Projekt / BDEW (2022-2023):</strong> Deutsche Gasabhängigkeit von Russland – 2020/21: ~55%<br><a href="https://www.bdew.de" target="_blank">https://www.bdew.de</a></li>
+                
+                <li id="Q14"><strong>Statistisches Bundesamt & Bundesministerium der Finanzen (2024):</strong> Steuereinnahmen nach Steuerarten<br><a href="https://www.destatis.de" target="_blank">https://www.destatis.de</a> / <a href="https://www.bundesfinanzministerium.de" target="_blank">https://www.bundesfinanzministerium.de</a></li>
+                
+                <li id="Q15"><strong>Destatis / BMF / OECD (2023-2024):</strong> Öffentliche Investitionsquote, Schuldenbremse, Maastricht-Kriterien<br><a href="https://www.destatis.de" target="_blank">https://www.destatis.de</a> / <a href="https://www.oecd.org" target="_blank">https://www.oecd.org</a></li>
+                
+                <li id="Q16"><strong>Weltbank (2020):</strong> "Doing Business 2020 – Germany" – Rang 22/190<br><a href="https://www.worldbank.org/doingbusiness" target="_blank">https://www.worldbank.org/doingbusiness</a></li>
+                
+                <li id="Q17"><strong>Demografieportal Bund/Länder (2024):</strong> Beitragszahler je Altersrentner – ~2,1<br><a href="https://www.demografie-portal.de" target="_blank">https://www.demografie-portal.de</a></li>
+                
+                <li id="Q18"><strong>Deutsche Rentenversicherung (2024):</strong> Rentenversicherungsbericht – Durchschnittsrenten, Rentenniveau, Beitragssatz<br><a href="https://www.deutsche-rentenversicherung.de" target="_blank">https://www.deutsche-rentenversicherung.de</a></li>
+                
+                <li id="Q19"><strong>Bundesinstitut für Berufsbildung (BIBB) (2024):</strong> Datenreport zum Berufsbildungsbericht – Ausbildungsmarkt<br><a href="https://www.bibb.de" target="_blank">https://www.bibb.de</a></li>
+                
+                <li id="Q20"><strong>Bundesjustizministerium / Kriminologische Studien (2024):</strong> Rückfallquoten (~50%), Gefangenenzahlen (~60.000)<br><a href="https://www.bmj.de" target="_blank">https://www.bmj.de</a></li>
+                
+                <li id="Q21"><strong>U.S. Department of Commerce / NIST (2022-2024):</strong> CHIPS and Science Act – 52-53 Mrd. USD<br><a href="https://www.commerce.gov" target="_blank">https://www.commerce.gov</a></li>
+                
+                <li id="Q22"><strong>Stifterverband / Destatis (2023):</strong> Private F&E-Ausgaben Deutschland – Hochrechnung ~90 Mrd. €/Jahr<br><a href="https://www.stifterverband.org" target="_blank">https://www.stifterverband.org</a></li>
+            </ol>
+
+            <div class="source-note">
+                <strong>Hinweis zu Schätzungen:</strong> Einige Werte (z.B. "ca. 6,5 Mio. Mindestlohnbeschäftigte") sind als Schätzungen gekennzeichnet, da keine einheitliche amtliche Statistik vorliegt. Diese basieren auf Proxy-Daten aus BMAS-Berichten, BA-Statistiken oder wissenschaftlichen Studien und bewegen sich in plausiblen Bandbreiten.
+            </div>
+        </div>
+
+        <!-- Begriffserklärungsverzeichnis -->
+        <div class="glossary-list">
+            <h2>Begriffserklärungsverzeichnis</h2>
+            <p style="margin-bottom: 1.5rem; line-height: 1.8;"><strong>Erklärung wichtiger Fachbegriffe aus dem Parteiprogramm.</strong> Begriffe im Format <span class="glossary-ref" style="cursor: default;">[Bx]</span> verweisen auf folgende Erklärungen.</p>
+            
+            <ol>
+                <li id="B1"><strong>Tarifbindung:</strong> Anteil der Beschäftigten, deren Arbeitsverhältnisse durch Tarifverträge geregelt sind. In Deutschland liegt die Tarifbindung bei ca. 49% (West: 52%, Ost: 43%).</li>
+                
+                <li id="B2"><strong>Reallohn:</strong> Kaufkraft des Nominallohns nach Abzug der Inflation. Misst, wie viel sich Beschäftigte tatsächlich von ihrem Gehalt leisten können.</li>
+                
+                <li id="B3"><strong>Produktivität je Arbeitsstunde:</strong> Wirtschaftsleistung (BIP) pro geleisteter Arbeitsstunde. Maß für die Effizienz der Wirtschaft.</li>
+                
+                <li id="B4"><strong>SGB II / Bürgergeld:</strong> Sozialgesetzbuch II regelt die Grundsicherung für Arbeitsuchende (früher "Hartz IV", seit 2023 "Bürgergeld").</li>
+                
+                <li id="B5"><strong>Grenzbelastung:</strong> Anteil des zusätzlichen Einkommens, der durch Steuern, Abgaben und Leistungskürzungen verloren geht. Hohe Grenzbelastungen reduzieren Arbeitsanreize.</li>
+                
+                <li id="B6"><strong>Fachkräftelücke:</strong> Differenz zwischen offenen Stellen und verfügbaren qualifizierten Arbeitskräften, insbesondere in Engpassberufen (MINT, Pflege, Handwerk).</li>
+                
+                <li id="B7"><strong>PISA:</strong> Programme for International Student Assessment – internationale Schulleistungsstudie der OECD, die Kompetenzen 15-Jähriger in Mathematik, Lesen und Naturwissenschaften misst.</li>
+                
+                <li id="B8"><strong>Risikoschüler:</strong> Schüler, die in PISA-Tests unter Kompetenzstufe 2 liegen und damit Schwierigkeiten haben, grundlegende Aufgaben zu lösen.</li>
+                
+                <li id="B9"><strong>DigitalPakt:</strong> Förderprogramm des Bundes zur Verbesserung der digitalen Infrastruktur an Schulen (2019-2024: 6,5 Mrd. €).</li>
+                
+                <li id="B10"><strong>Schuldenbremse:</strong> Verfassungsrechtliche Regel, die strukturelle Neuverschuldung begrenzt (Bund: max. 0,35% BIP, Länder: 0%).</li>
+                
+                <li id="B11"><strong>Investitionsregel:</strong> Vorschlag zur Reform der Schuldenbremse, der zusätzliche Kreditaufnahme für öffentliche Investitionen erlaubt (z.B. 1% BIP = ~40 Mrd. € jährlich).</li>
+                
+                <li id="B12"><strong>MwSt (Mehrwertsteuer):</strong> Verbrauchsteuer auf Waren und Dienstleistungen. In Deutschland: 19% Regelsatz, 7% ermäßigt für Grundbedarf.</li>
+                
+                <li id="B13"><strong>Kalte Progression:</strong> Steuerliche Mehrbelastung durch Inflation, wenn Steuertarife nicht angepasst werden. Führt zu sinkender Kaufkraft trotz Lohnerhöhungen.</li>
+                
+                <li id="B14"><strong>FTTH (Fiber to the Home):</strong> Glasfaseranschluss bis ins Haus. Ermöglicht Internet-Geschwindigkeiten von 1 Gbit/s und mehr.</li>
+                
+                <li id="B15"><strong>Once-Only-Prinzip:</strong> Bürger und Unternehmen müssen Daten der Verwaltung nur einmal mitteilen. Behörden tauschen Informationen untereinander aus.</li>
+                
+                <li id="B16"><strong>eID (elektronische Identität):</strong> Online-Ausweisfunktion des Personalausweises für digitale Behördengänge und Vertragsabschlüsse.</li>
+                
+                <li id="B17"><strong>IPCEI (Important Projects of Common European Interest):</strong> EU-Großprojekte von gemeinsamem europäischem Interesse, die höhere Staatsbeihilfen erlauben (z.B. Halbleiter, Batterien).</li>
+                
+                <li id="B18"><strong>F&E-Quote:</strong> Ausgaben für Forschung und Entwicklung im Verhältnis zum BIP. Deutschland: ~3,1%, Ziel: 3,5%.</li>
+                
+                <li id="B19"><strong>Modal Split:</strong> Aufteilung des Verkehrsaufkommens auf verschiedene Verkehrsmittel (Auto, ÖPNV, Fahrrad, Fußverkehr).</li>
+                
+                <li id="B20"><strong>Deutschlandtakt:</strong> Integriertes Taktsystem für den Bahnverkehr mit optimierten Umsteigeverbindungen und regelmäßigen Abfahrtszeiten.</li>
+                
+                <li id="B21"><strong>Seltene Erden:</strong> Gruppe von 17 chemischen Elementen, die für High-Tech-Produkte unverzichtbar sind (z.B. Smartphones, Windräder, E-Autos). China dominiert den Markt mit >70%.</li>
+                
+                <li id="B22"><strong>Lieferkette:</strong> Gesamtheit aller Prozesse von der Rohstoffgewinnung bis zum Endprodukt. Störanfällig bei hohen Abhängigkeiten von einzelnen Ländern.</li>
+                
+                <li id="B23"><strong>Urban Mining:</strong> Gewinnung von Rohstoffen aus Abfallprodukten und Altgeräten (z.B. Metalle aus Elektroschrott).</li>
+                
+                <li id="B24"><strong>Sunset-Clauses:</strong> "Verfallsdatum" für Gesetze und Vorschriften. Automatisches Außerkrafttreten nach festgelegter Frist, wenn nicht aktiv verlängert.</li>
+                
+                <li id="B25"><strong>One-Stop-Shop:</strong> Zentrale Anlaufstelle für verschiedene Verwaltungsdienstleistungen oder Genehmigungsverfahren an einem Ort.</li>
+                
+                <li id="B26"><strong>Bürokratiekosten:</strong> Aufwand für Unternehmen durch gesetzliche Informations-, Dokumentations- und Meldepflichten. In Deutschland: ~65 Mrd. €/Jahr.</li>
+                
+                <li id="B27"><strong>Rentenniveau:</strong> Verhältnis der Standardrente (45 Beitragsjahre mit Durchschnittsverdienst) zum durchschnittlichen Bruttoentgelt. Aktuell: ~48%.</li>
+                
+                <li id="B28"><strong>Kapitaldeckung:</strong> Altersvorsorge-System, bei dem eigene Beiträge angespart und am Kapitalmarkt angelegt werden (Gegenteil: Umlageverfahren).</li>
+                
+                <li id="B29"><strong>Umlageverfahren:</strong> Altersvorsorge-System, bei dem aktuelle Beitragszahler die aktuellen Rentner finanzieren ("Generationenvertrag").</li>
+                
+                <li id="B30"><strong>Focus Deterrence:</strong> Evidenzbasiertes Polizeikonzept zur Gewaltreduktion. Kombination aus gezielter Intervention in Hotspots, klaren Konsequenzen und sozialer Unterstützung.</li>
+                
+                <li id="B31"><strong>Rückfallquote:</strong> Anteil verurteilter Straftäter, die innerhalb eines bestimmten Zeitraums (meist 3 Jahre) erneut straffällig werden. Deutschland: ~46%.</li>
+                
+                <li id="B32"><strong>Resozialisierung:</strong> Wiedereingliederung von Straftätern in die Gesellschaft durch Bildung, Arbeit und soziale Betreuung. Ziel: Rückfallprävention.</li>
+                
+                <li id="B33"><strong>Duales System:</strong> Deutsches Berufsausbildungssystem mit praktischer Ausbildung im Betrieb und theoretischem Unterricht in der Berufsschule.</li>
+                
+                <li id="B34"><strong>Ausbildungsquote:</strong> Anteil der Auszubildenden an allen sozialversicherungspflichtig Beschäftigten. Deutschland: ~4,8% (rückläufig seit 2010).</li>
+                
+                <li id="B35"><strong>KMU (Kleine und mittlere Unternehmen):</strong> Unternehmen mit weniger als 250 Mitarbeitern und maximal 50 Mio. € Jahresumsatz. Bilden das Rückgrat der deutschen Wirtschaft.</li>
+                
+                <li id="B36"><strong>MINT:</strong> Sammelbezeichnung für Fächer und Berufe aus Mathematik, Informatik, Naturwissenschaften und Technik.</li>
+                
+                <li id="B37"><strong>BIP (Bruttoinlandsprodukt):</strong> Gesamtwert aller Waren und Dienstleistungen, die innerhalb eines Jahres in einem Land produziert werden. Deutschland 2024: ~4.200 Mrd. €.</li>
+                
+                <li id="B38"><strong>Maastricht-Kriterien:</strong> Konvergenzkriterien für EU-Staaten. U.a.: Neuverschuldung max. 3% BIP, Gesamtverschuldung max. 60% BIP.</li>
+                
+                <li id="B39"><strong>Allgemeinverbindlichkeit:</strong> Erklärung eines Tarifvertrags für allgemeinverbindlich, sodass er auch für nicht-tarifgebundene Unternehmen gilt.</li>
+                
+                <li id="B40"><strong>Sozialpartnerschaft:</strong> Zusammenarbeit von Gewerkschaften und Arbeitgeberverbänden bei Tarifverhandlungen und wirtschaftspolitischen Fragen.</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        function showPunkt(nummer) {
+            // Alle Cards ausblenden
+            document.querySelectorAll('.detail-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            
+            // Alle Nav-Items deaktivieren
+            document.querySelectorAll('.punkt-nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Gewählte Card anzeigen
+            document.getElementById('punkt-' + nummer).classList.add('active');
+            
+            // Gewähltes Nav-Item aktivieren
+            document.querySelectorAll('.punkt-nav-item')[nummer - 1].classList.add('active');
+            
+            // Nach oben scrollen
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
